@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Totem Interattivo - I.C. "King-Mila"</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+        body { font-family: 'Inter', sans-serif; }
+        .carousel-slide { display: none; }
+        .carousel-slide.active { display: block; }
+        /* Animazione Ticker Scorrevole */
+        @keyframes ticker {
+            0% { transform: translateX(100%); }
+            100% { transform: translateX(-100%); }
+        }
+        .animate-ticker {
+            display: inline-block;
+            white-space: nowrap;
+            animation: ticker 35s linear infinite;
+        }
+        .animate-ticker:hover {
+            animation-play-state: paused;
+        }
+    </style>
+</head>
+<body class="bg-slate-900 text-slate-100 h-screen w-screen overflow-hidden flex flex-col select-none">
+
+    <!-- HEADER ISTITUTO -->
+    <header class="bg-slate-800 border-b border-slate-700 px-8 py-3 flex justify-between items-center shadow-lg shrink-0">
+        <div class="flex items-center space-x-4">
+            <div class="bg-indigo-600 text-white p-2.5 rounded-xl font-black text-xl shadow-md">
+                KM
+            </div>
+            <div>
+                <h1 class="text-xl font-bold tracking-tight text-white">Istituto Comprensivo "King-Mila"</h1>
+                <p class="text-xs text-indigo-400 font-medium uppercase tracking-wider">Torino • Totem Informativo Digitale</p>
+            </div>
+        </div>
+        <!-- Orologio e Data in tempo reale -->
+        <div class="text-right bg-slate-900/60 px-4 py-2 rounded-xl border border-slate-700/60">
+            <div id="live-time" class="text-xl font-bold text-indigo-300 font-mono">00:00:00</div>
+            <div id="live-date" class="text-xs text-slate-400 capitalize">Caricamento data...</div>
+        </div>
+    </header>
+
+    <!-- BANNER TICKER SCORREVOLE -->
+    <div class="bg-indigo-950 border-b border-indigo-800/60 py-2 px-6 flex items-center overflow-hidden shrink-0 shadow-inner">
+        <div class="flex items-center space-x-2 mr-6 shrink-0 z-10 bg-indigo-900 px-3 py-1 rounded-lg border border-indigo-700">
+            <span class="flex h-2.5 w-2.5 relative">
+                <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-amber-400 opacity-75"></span>
+                <span class="relative inline-flex rounded-full h-2.5 w-2.5 bg-amber-500"></span>
+            </span>
+            <span class="text-xs font-bold uppercase tracking-wider text-amber-300">AVVISI E SCADENZE</span>
+        </div>
+        <div class="overflow-hidden whitespace-nowrap w-full">
+            <div id="ticker-content" class="animate-ticker text-sm text-indigo-100 font-medium">
+                📢 Sincronizzazione in corso con il foglio Google "avviso totem"...
+            </div>
+        </div>
+    </div>
+
+    <!-- CONTENUTO PRINCIPALE -->
+    <main class="flex-1 p-6 grid grid-cols-12 gap-6 overflow-hidden relative">
+
+        <!-- COLONNA SINISTRA: FOTO CON DESCRIZIONE SEMPLICE & EVENTI (8 Colonne) -->
+        <section class="col-span-8 flex flex-col space-y-5 h-full overflow-hidden">
+            
+            <!-- CAROSELLO FOTO CON DESCRIZIONE SEMPLICE -->
+            <div class="bg-slate-800 rounded-2xl border border-slate-700 shadow-xl overflow-hidden flex flex-col h-[52%] relative">
+                <div class="absolute top-4 left-4 z-10 bg-black/60 backdrop-blur-md px-3 py-1 rounded-full text-xs font-semibold uppercase tracking-wider text-indigo-300 border border-white/10">
+                    📸 Gestione Foto & Vetrina Scolastica
+                </div>
+                
+                <!-- Slide 1 -->
+                <div class="carousel-slide active h-full relative">
+                    <img src="https://images.unsplash.com/photo-1580582932707-520aed937b7b?auto=format&fit=crop&w=1200&q=80" alt="Scuola" class="w-full h-full object-cover">
+                    <div class="absolute inset-0 bg-gradient-to-t from-slate-900 via-slate-900/40 to-transparent flex flex-col justify-end p-6">
+                        <span class="text-[11px] bg-indigo-600 text-white px-2 py-0.5 rounded w-max mb-1 font-semibold">Attività Principale</span>
+                        <h3 class="text-xl font-bold text-white mb-1">Open Day 2026/2027 • I.C. King-Mila</h3>
+                        <p class="text-sm text-slate-300">Presentazione dell'offerta formativa, laboratori STEM e visita guidata dei plessi scolastici.</p>
+                    </div>
+                </div>
+
+                <!-- Slide 2 -->
+                <div class="carousel-slide h-full relative">
+                    <img src="https://images.unsplash.com/photo-1509062522246-3755977927d7?auto=format&fit=crop&w=1200&q=80" alt="Laboratorio" class="w-full h-full object-cover">
+                    <div class="absolute inset-0 bg-gradient-to-t from-slate-900 via-slate-900/40 to-transparent flex flex-col justify-end p-6">
+                        <span class="text-[11px] bg-indigo-600 text-white px-2 py-0.5 rounded w-max mb-1 font-semibold">Laboratori Didattici</span>
+                        <h3 class="text-xl font-bold text-white mb-1">Officina Creativa & Coding Unplugged</h3>
+                        <p class="text-sm text-slate-300">Momenti di laboratorio pratico di logica, robotica educativa e creatività per gli alunni.</p>
+                    </div>
+                </div>
+
+                <!-- Slide 3 -->
+                <div class="carousel-slide h-full relative">
+                    <img src="https://images.unsplash.com/photo-1427504494785-3a9ca7044f45?auto=format&fit=crop&w=1200&q=80" alt="Sport" class="w-full h-full object-cover">
+                    <div class="absolute inset-0 bg-gradient-to-t from-slate-900 via-slate-900/40 to-transparent flex flex-col justify-end p-6">
+                        <span class="text-[11px] bg-indigo-600 text-white px-2 py-0.5 rounded w-max mb-1 font-semibold">Progetto Sportivo</span>
+                        <h3 class="text-xl font-bold text-white mb-1">Olimpia-King • Sport e Attività Motoria</h3>
+                        <p class="text-sm text-slate-300">Tornei interni di atletica leggera, educazione alla salute e socializzazione giovanile.</p>
+                    </div>
+                </div>
+
+                <!-- Indicatori Carosello -->
+                <div class="absolute bottom-4 right-4 z-10 flex space-x-2">
+                    <span class="dot h-2 w-2 rounded-full bg-white/50 cursor-pointer transition-all"></span>
+                    <span class="dot h-2 w-2 rounded-full bg-white/50 cursor-pointer transition-all"></span>
+                    <span class="dot h-2 w-2 rounded-full bg-white/50 cursor-pointer transition-all"></span>
+                </div>
+            </div>
+
+            <!-- EVENTI DINAMICI (Filtro ultimi 15 giorni) -->
+            <div class="bg-slate-800 rounded-2xl border border-slate-700 shadow-xl p-4 flex-1 flex flex-col overflow-hidden">
+                <div class="flex justify-between items-center mb-3">
+                    <h3 class="text-sm font-bold text-indigo-300 flex items-center space-x-2">
+                        <span>📅 Eventi Attivi (Ultime novità e ultimi 15 giorni)</span>
+                    </h3>
+                    <span class="text-[11px] bg-slate-700/80 px-2.5 py-0.5 rounded text-slate-300">Foglio: "avviso totem"</span>
+                </div>
+                <div class="overflow-y-auto flex-1 space-y-2.5 pr-1" id="events-container">
+                    <!-- Popolato da script -->
+                </div>
+            </div>
+
+        </section>
+
+        <!-- COLONNA DESTRA: TASTI INTERATTIVI COMPATTI (4 Colonne) -->
+        <section class="col-span-4 flex flex-col space-y-4 h-full justify-between">
+            
+            <div class="bg-slate-800/90 rounded-2xl border border-slate-700 shadow-xl p-5 flex flex-col space-y-4 h-full">
+                <h2 class="text-sm font-bold text-white uppercase tracking-wider text-center border-b border-slate-700 pb-3">
+                    Menu Rapido Totem
+                </h2>
+
+                <div class="flex flex-col space-y-3.5 flex-1 justify-around py-2">
+                    
+                    <!-- Tasto 1: Orario Scolastico -->
+                    <button onclick="openModal('modal-orario')" class="group relative bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white p-3.5 rounded-xl shadow-lg border border-indigo-400/30 transition-all transform active:scale-95 flex items-center space-x-3.5 text-left">
+                        <div class="bg-white/10 p-2.5 rounded-lg text-xl group-hover:scale-110 transition-transform">
+                            📅
+                        </div>
+                        <div>
+                            <h3 class="font-bold text-sm">Orario Scolastico</h3>
+                            <p class="text-[11px] text-indigo-200">Quadri orari e turnazioni plessi</p>
+                        </div>
+                    </button>
+
+                    <!-- Tasto 2: Orario Segreteria -->
+                    <button onclick="openModal('modal-segreteria')" class="group relative bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white p-3.5 rounded-xl shadow-lg border border-emerald-400/30 transition-all transform active:scale-95 flex items-center space-x-3.5 text-left">
+                        <div class="bg-white/10 p-2.5 rounded-lg text-xl group-hover:scale-110 transition-transform">
+                            🏢
+                        </div>
+                        <div>
+                            <h3 class="font-bold text-sm">Orario Segreteria</h3>
+                            <p class="text-[11px] text-emerald-200">Ricevimento pubblico e sportello</p>
+                        </div>
+                    </button>
+
+                    <!-- Tasto 3: Mappa della Scuola -->
+                    <button onclick="openModal('modal-mappa')" class="group relative bg-gradient-to-r from-amber-600 to-orange-600 hover:from-amber-500 hover:to-orange-500 text-white p-3.5 rounded-xl shadow-lg border border-amber-400/30 transition-all transform active:scale-95 flex items-center space-x-3.5 text-left">
+                        <div class="bg-white/10 p-2.5 rounded-lg text-xl group-hover:scale-110 transition-transform">
+                            🗺️
+                        </div>
+                        <div>
+                            <h3 class="font-bold text-sm">Mappa della Scuola</h3>
+                            <p class="text-[11px] text-amber-200">Plesso King & Plesso Mila</p>
+                        </div>
+                    </button>
+
+                </div>
+
+                <div class="bg-slate-900/80 p-3 rounded-xl border border-slate-700/60 text-center">
+                    <p class="text-[11px] text-slate-400">Toccare un riquadro per aprire la sezione.</p>
+                </div>
+            </div>
+
+        </section>
+
+    </main>
+
+    <!-- MODALI -->
+    <div id="modal-orario" class="fixed inset-0 bg-black/80 backdrop-blur-sm hidden z-50 flex items-center justify-center p-8">
+        <div class="bg-slate-800 border border-slate-700 w-full max-w-3xl rounded-2xl shadow-2xl overflow-hidden flex flex-col max-h-[85vh]">
+            <div class="bg-indigo-900 px-6 py-4 flex justify-between items-center border-b border-indigo-800">
+                <h3 class="text-lg font-bold text-white">📅 Orario Scolastico • I.C. "King-Mila"</h3>
+                <button onclick="closeModal('modal-orario')" class="text-slate-300 hover:text-white text-xl font-bold px-3 py-1 rounded-lg bg-indigo-950">&times;</button>
+            </div>
+            <div class="p-6 overflow-y-auto space-y-4 text-slate-300 text-sm">
+                <div class="grid grid-cols-2 gap-4">
+                    <div class="bg-slate-900 p-4 rounded-xl border border-slate-700">
+                        <h4 class="font-bold text-indigo-300 mb-1">Plesso Centrale "King" (Via Germonio 12)</h4>
+                        <p class="text-xs text-slate-400">Secondaria di I Grado • Ingresso 08:00 - Uscita 14:00</p>
+                    </div>
+                    <div class="bg-slate-900 p-4 rounded-xl border border-slate-700">
+                        <h4 class="font-bold text-indigo-300 mb-1">Plesso "Agazzi / Mila" (Via Chambery 33)</h4>
+                        <p class="text-xs text-slate-400">Scuola Primaria • Orario curricolare e moduli</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="modal-segreteria" class="fixed inset-0 bg-black/80 backdrop-blur-sm hidden z-50 flex items-center justify-center p-8">
+        <div class="bg-slate-800 border border-slate-700 w-full max-w-3xl rounded-2xl shadow-2xl overflow-hidden flex flex-col max-h-[85vh]">
+            <div class="bg-emerald-900 px-6 py-4 flex justify-between items-center border-b border-emerald-800">
+                <h3 class="text-lg font-bold text-white">🏢 Orari e Sportello Segreteria</h3>
+                <button onclick="closeModal('modal-segreteria')" class="text-slate-300 hover:text-white text-xl font-bold px-3 py-1 rounded-lg bg-emerald-950">&times;</button>
+            </div>
+            <div class="p-6 overflow-y-auto space-y-3 text-slate-300 text-sm">
+                <div class="bg-slate-900 p-4 rounded-xl border border-slate-700 space-y-2">
+                    <h4 class="font-bold text-emerald-300">Ricevimento al Pubblico</h4>
+                    <p class="text-xs"><strong>Lunedì, Mercoledì e Venerdì:</strong> 11:00 - 13:00</p>
+                    <p class="text-xs"><strong>Martedì e Giovedì:</strong> 15:00 - 17:00</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="modal-mappa" class="fixed inset-0 bg-black/80 backdrop-blur-sm hidden z-50 flex items-center justify-center p-8">
+        <div class="bg-slate-800 border border-slate-700 w-full max-w-3xl rounded-2xl shadow-2xl overflow-hidden flex flex-col max-h-[85vh]">
+            <div class="bg-amber-900 px-6 py-4 flex justify-between items-center border-b border-amber-800">
+                <h3 class="text-lg font-bold text-white">🗺️ Mappa dei Plessi</h3>
+                <button onclick="closeModal('modal-mappa')" class="text-slate-300 hover:text-white text-xl font-bold px-3 py-1 rounded-lg bg-amber-950">&times;</button>
+            </div>
+            <div class="p-6 overflow-y-auto space-y-4 text-slate-300 text-sm">
+                <div class="grid grid-cols-2 gap-4">
+                    <div class="bg-slate-900 p-4 rounded-xl border border-slate-700">
+                        <h4 class="font-bold text-amber-300 mb-1">Plesso King</h4>
+                        <p class="text-xs text-slate-400">📍 Via Germonio 12, Torino</p>
+                    </div>
+                    <div class="bg-slate-900 p-4 rounded-xl border border-slate-700">
+                        <h4 class="font-bold text-amber-300 mb-1">Plesso Mila</h4>
+                        <p class="text-xs text-slate-400">📍 Via Chambery 33, Torino</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- SCRIPT -->
+    <script>
+        function updateClock() {
+            const now = new Date();
+            document.getElementById('live-time').innerText = now.toLocaleTimeString('it-IT');
+            document.getElementById('live-date').innerText = now.toLocaleDateString('it-IT', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
+        }
+        setInterval(updateClock, 1000);
+        updateClock();
+
+        let currentSlide = 0;
+        const slides = document.querySelectorAll('.carousel-slide');
+        const dots = document.querySelectorAll('.dot');
+        function showSlide(index) {
+            slides.forEach((s, i) => { s.classList.remove('active'); dots[i].classList.remove('bg-white'); dots[i].classList.add('bg-white/50'); });
+            slides[index].classList.add('active');
+            dots[index].classList.remove('bg-white/50');
+            dots[index].classList.add('bg-white');
+        }
+        setInterval(() => { currentSlide = (currentSlide + 1) % slides.length; showSlide(currentSlide); }, 6000);
+
+        function openModal(id) { document.getElementById(id).classList.remove('hidden'); }
+        function closeModal(id) { document.getElementById(id).classList.add('hidden'); }
+
+        async function loadTotemData() {
+            const rawEvents = [
+                { titolo: "Open Day Scuola Secondaria 'Mila'", dataInizio: "2026-11-10", dataFine: "2026-11-25", luogo: "Plesso Mila", stato: "In Evidenza" },
+                { titolo: "Uscita Didattica a Fondazione Merz", dataInizio: "2026-11-18", dataFine: "2026-11-18", luogo: "Torino - Via Limone 24", stato: "In Evidenza" },
+                { titolo: "IV Edizione Settimana dell'Orientamento", dataInizio: "2026-11-23", dataFine: "2026-11-27", luogo: "Aula Romeo&Giulietta", stato: "Programmato" }
+            ];
+
+            const rawAvvisi = [
+                "Circolare n. 112: Sciopero nazionale e riduzioni servizi.",
+                "Iscrizioni online aperte su Piattaforma Unica MIM.",
+                "Prenotazione colloqui scuola-famiglia attiva su Registro Elettronico."
+            ];
+
+            const oggi = new Date();
+            const quindiciGiorniFa = new Date();
+            quindiciGiorniFa.setDate(oggi.getDate() - 15);
+
+            const activeEvents = rawEvents.filter(ev => new Date(ev.dataFine) >= quindiciGiorniFa);
+
+            const container = document.getElementById('events-container');
+            container.innerHTML = '';
+            activeEvents.forEach(ev => {
+                container.innerHTML += `
+                    <div class="bg-slate-900/70 p-3 rounded-xl border border-slate-700/60 flex items-center justify-between">
+                        <div>
+                            <span class="text-[10px] bg-indigo-900 text-indigo-200 px-2 py-0.5 rounded font-semibold">${ev.dataInizio}</span>
+                            <h4 class="font-semibold text-xs text-white mt-1">${ev.titolo}</h4>
+                            <p class="text-[11px] text-slate-400">📍 ${ev.luogo}</p>
+                        </div>
+                        <span class="text-[11px] bg-emerald-900/80 text-emerald-300 px-2 py-0.5 rounded-full font-medium">${ev.stato}</span>
+                    </div>
+                `;
+            });
+
+            document.getElementById('ticker-content').innerText = "📢 " + rawAvvisi.join("   •   ") + "   •   I.C. King-Mila: Aggiornato in tempo reale dal foglio Google 'avviso totem'.";
+        }
+
+        loadTotemData();
+    </script>
+</body>
+</html>
