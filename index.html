@@ -26,29 +26,29 @@
         }
     </style>
 </head>
-<body class="bg-slate-900 text-slate-100 h-screen w-screen overflow-hidden flex flex-col select-none">
+<body class="bg-slate-950 text-slate-100 h-screen w-screen overflow-hidden flex flex-col select-none">
 
     <!-- HEADER ISTITUTO -->
-    <header class="bg-slate-800 border-b border-slate-700 px-8 py-3 flex justify-between items-center shadow-lg shrink-0">
+    <header class="bg-slate-900/90 backdrop-blur-md border-b border-slate-800 px-8 py-3.5 flex justify-between items-center shadow-xl shrink-0">
         <div class="flex items-center space-x-4">
-            <div class="bg-indigo-600 text-white p-2.5 rounded-xl font-black text-xl shadow-md">
+            <div class="bg-gradient-to-br from-indigo-500 to-indigo-700 text-white p-3 rounded-2xl font-black text-xl shadow-lg shadow-indigo-500/20">
                 KM
             </div>
             <div>
-                <h1 class="text-xl font-bold tracking-tight text-white">Istituto Comprensivo "King-Mila"</h1>
-                <p class="text-xs text-indigo-400 font-medium uppercase tracking-wider">Torino • Totem Informativo Digitale</p>
+                <h1 class="text-xl font-extrabold tracking-tight text-white">Istituto Comprensivo "King-Mila"</h1>
+                <p class="text-xs text-indigo-400 font-semibold uppercase tracking-wider">Torino • Totem Informativo Digitale</p>
             </div>
         </div>
         <!-- Orologio e Data in tempo reale -->
-        <div class="text-right bg-slate-900/60 px-4 py-2 rounded-xl border border-slate-700/60">
-            <div id="live-time" class="text-xl font-bold text-indigo-300 font-mono">00:00:00</div>
-            <div id="live-date" class="text-xs text-slate-400 capitalize">Caricamento data...</div>
+        <div class="text-right bg-slate-900/80 px-4 py-2 rounded-xl border border-slate-800 shadow-inner">
+            <div id="live-time" class="text-xl font-extrabold text-indigo-300 font-mono tracking-wide">00:00:00</div>
+            <div id="live-date" class="text-xs text-slate-400 capitalize font-medium">Caricamento data...</div>
         </div>
     </header>
 
     <!-- BANNER TICKER SCORREVOLE -->
-    <div class="bg-indigo-950 border-b border-indigo-800/60 py-2 px-6 flex items-center overflow-hidden shrink-0 shadow-inner">
-        <div class="flex items-center space-x-2 mr-6 shrink-0 z-10 bg-indigo-900 px-3 py-1 rounded-lg border border-indigo-700">
+    <div class="bg-indigo-950/90 border-b border-indigo-900/50 py-2.5 px-6 flex items-center overflow-hidden shrink-0 shadow-inner">
+        <div class="flex items-center space-x-2 mr-6 shrink-0 z-10 bg-indigo-900/80 px-3 py-1 rounded-lg border border-indigo-700/60 shadow-sm">
             <span class="flex h-2.5 w-2.5 relative">
                 <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-amber-400 opacity-75"></span>
                 <span class="relative inline-flex rounded-full h-2.5 w-2.5 bg-amber-500"></span>
@@ -65,60 +65,60 @@
     <!-- CONTENUTO PRINCIPALE -->
     <main class="flex-1 p-6 grid grid-cols-12 gap-6 overflow-hidden relative">
 
-        <!-- COLONNA SINISTRA: FOTO CON DESCRIZIONE SEMPLICE & EVENTI (8 Colonne) -->
+        <!-- COLONNA SINISTRA: FOTO & EVENTI (8 Colonne) -->
         <section class="col-span-8 flex flex-col space-y-5 h-full overflow-hidden">
             
             <!-- CAROSELLO FOTO CON DESCRIZIONE SEMPLICE -->
-            <div class="bg-slate-800 rounded-2xl border border-slate-700 shadow-xl overflow-hidden flex flex-col h-[52%] relative">
-                <div class="absolute top-4 left-4 z-10 bg-black/60 backdrop-blur-md px-3 py-1 rounded-full text-xs font-semibold uppercase tracking-wider text-indigo-300 border border-white/10">
-                    📸 Gestione Foto & Vetrina Scolastica
+            <div class="bg-slate-900 rounded-3xl border border-slate-800 shadow-2xl overflow-hidden flex flex-col h-[52%] relative group">
+                <div class="absolute top-4 left-4 z-10 bg-black/60 backdrop-blur-md px-3.5 py-1.5 rounded-full text-xs font-bold uppercase tracking-wider text-indigo-300 border border-white/10 shadow-lg">
+                    📸 Vetrina & Attività Scolastiche
                 </div>
                 
                 <!-- Slide 1 -->
                 <div class="carousel-slide active h-full relative">
                     <img src="https://images.unsplash.com/photo-1580582932707-520aed937b7b?auto=format&fit=crop&w=1200&q=80" alt="Scuola" class="w-full h-full object-cover">
-                    <div class="absolute inset-0 bg-gradient-to-t from-slate-900 via-slate-900/40 to-transparent flex flex-col justify-end p-6">
-                        <span class="text-[11px] bg-indigo-600 text-white px-2 py-0.5 rounded w-max mb-1 font-semibold">Attività Principale</span>
-                        <h3 class="text-xl font-bold text-white mb-1">Open Day 2026/2027 • I.C. King-Mila</h3>
-                        <p class="text-sm text-slate-300">Presentazione dell'offerta formativa, laboratori STEM e visita guidata dei plessi scolastici.</p>
+                    <div class="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/40 to-transparent flex flex-col justify-end p-6">
+                        <span class="text-[11px] bg-indigo-600 text-white px-2.5 py-1 rounded-md w-max mb-1.5 font-bold shadow">Attività Principale</span>
+                        <h3 class="text-2xl font-extrabold text-white mb-1">Open Day 2026/2027 • I.C. King-Mila</h3>
+                        <p class="text-sm text-slate-300 font-medium">Presentazione dell'offerta formativa, laboratori STEM e visita guidata dei plessi scolastici.</p>
                     </div>
                 </div>
 
                 <!-- Slide 2 -->
                 <div class="carousel-slide h-full relative">
                     <img src="https://images.unsplash.com/photo-1509062522246-3755977927d7?auto=format&fit=crop&w=1200&q=80" alt="Laboratorio" class="w-full h-full object-cover">
-                    <div class="absolute inset-0 bg-gradient-to-t from-slate-900 via-slate-900/40 to-transparent flex flex-col justify-end p-6">
-                        <span class="text-[11px] bg-indigo-600 text-white px-2 py-0.5 rounded w-max mb-1 font-semibold">Laboratori Didattici</span>
-                        <h3 class="text-xl font-bold text-white mb-1">Officina Creativa & Coding Unplugged</h3>
-                        <p class="text-sm text-slate-300">Momenti di laboratorio pratico di logica, robotica educativa e creatività per gli alunni.</p>
+                    <div class="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/40 to-transparent flex flex-col justify-end p-6">
+                        <span class="text-[11px] bg-indigo-600 text-white px-2.5 py-1 rounded-md w-max mb-1.5 font-bold shadow">Laboratori Didattici</span>
+                        <h3 class="text-2xl font-extrabold text-white mb-1">Officina Creativa & Coding Unplugged</h3>
+                        <p class="text-sm text-slate-300 font-medium">Momenti di laboratorio pratico di logica, robotica educativa e creatività per gli alunni.</p>
                     </div>
                 </div>
 
                 <!-- Slide 3 -->
                 <div class="carousel-slide h-full relative">
                     <img src="https://images.unsplash.com/photo-1427504494785-3a9ca7044f45?auto=format&fit=crop&w=1200&q=80" alt="Sport" class="w-full h-full object-cover">
-                    <div class="absolute inset-0 bg-gradient-to-t from-slate-900 via-slate-900/40 to-transparent flex flex-col justify-end p-6">
-                        <span class="text-[11px] bg-indigo-600 text-white px-2 py-0.5 rounded w-max mb-1 font-semibold">Progetto Sportivo</span>
-                        <h3 class="text-xl font-bold text-white mb-1">Olimpia-King • Sport e Attività Motoria</h3>
-                        <p class="text-sm text-slate-300">Tornei interni di atletica leggera, educazione alla salute e socializzazione giovanile.</p>
+                    <div class="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/40 to-transparent flex flex-col justify-end p-6">
+                        <span class="text-[11px] bg-indigo-600 text-white px-2.5 py-1 rounded-md w-max mb-1.5 font-bold shadow">Progetto Sportivo</span>
+                        <h3 class="text-2xl font-extrabold text-white mb-1">Olimpia-King • Sport e Attività Motoria</h3>
+                        <p class="text-sm text-slate-300 font-medium">Tornei interni di atletica leggera, educazione alla salute e socializzazione giovanile.</p>
                     </div>
                 </div>
 
                 <!-- Indicatori Carosello -->
                 <div class="absolute bottom-4 right-4 z-10 flex space-x-2">
-                    <span class="dot h-2 w-2 rounded-full bg-white/50 cursor-pointer transition-all"></span>
-                    <span class="dot h-2 w-2 rounded-full bg-white/50 cursor-pointer transition-all"></span>
-                    <span class="dot h-2 w-2 rounded-full bg-white/50 cursor-pointer transition-all"></span>
+                    <span class="dot h-2.5 w-2.5 rounded-full bg-white/50 cursor-pointer transition-all"></span>
+                    <span class="dot h-2.5 w-2.5 rounded-full bg-white/50 cursor-pointer transition-all"></span>
+                    <span class="dot h-2.5 w-2.5 rounded-full bg-white/50 cursor-pointer transition-all"></span>
                 </div>
             </div>
 
             <!-- EVENTI DINAMICI (Filtro ultimi 15 giorni) -->
-            <div class="bg-slate-800 rounded-2xl border border-slate-700 shadow-xl p-4 flex-1 flex flex-col overflow-hidden">
+            <div class="bg-slate-900 rounded-3xl border border-slate-800 shadow-2xl p-5 flex-1 flex flex-col overflow-hidden">
                 <div class="flex justify-between items-center mb-3">
                     <h3 class="text-sm font-bold text-indigo-300 flex items-center space-x-2">
                         <span>📅 Eventi Attivi (Ultime novità e ultimi 15 giorni)</span>
                     </h3>
-                    <span class="text-[11px] bg-slate-700/80 px-2.5 py-0.5 rounded text-slate-300">Foglio: "avviso totem"</span>
+                    <span class="text-[11px] bg-slate-800 text-slate-300 px-3 py-1 rounded-lg border border-slate-700/60 font-medium">Foglio: "avviso totem"</span>
                 </div>
                 <div class="overflow-y-auto flex-1 space-y-2.5 pr-1" id="events-container">
                     <!-- Popolato da script -->
@@ -127,53 +127,56 @@
 
         </section>
 
-        <!-- COLONNA DESTRA: TASTI INTERATTIVI COMPATTI (4 Colonne) -->
+        <!-- COLONNA DESTRA: TASTI MENU RAPIDO QUADRATI (4 Colonne) -->
         <section class="col-span-4 flex flex-col space-y-4 h-full justify-between">
             
-            <div class="bg-slate-800/90 rounded-2xl border border-slate-700 shadow-xl p-5 flex flex-col space-y-4 h-full">
-                <h2 class="text-sm font-bold text-white uppercase tracking-wider text-center border-b border-slate-700 pb-3">
-                    Menu Rapido Totem
-                </h2>
+            <div class="bg-slate-900 rounded-3xl border border-slate-800 shadow-2xl p-5 flex flex-col space-y-4 h-full justify-between">
+                <div>
+                    <h2 class="text-sm font-bold text-white uppercase tracking-wider text-center border-b border-slate-800 pb-3">
+                        Menu Rapido Totem
+                    </h2>
+                </div>
 
-                <div class="flex flex-col space-y-3.5 flex-1 justify-around py-2">
+                <!-- Griglia Tasti Quadrati Simmetrici -->
+                <div class="grid grid-cols-1 gap-3.5 my-auto">
                     
-                    <!-- Tasto 1: Orario Scolastico -->
-                    <button onclick="openModal('modal-orario')" class="group relative bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white p-3.5 rounded-xl shadow-lg border border-indigo-400/30 transition-all transform active:scale-95 flex items-center space-x-3.5 text-left">
-                        <div class="bg-white/10 p-2.5 rounded-lg text-xl group-hover:scale-110 transition-transform">
+                    <!-- Tasto 1: Orario Scolastico (Collegato a visualizzazione PDF / Documento) -->
+                    <button onclick="openModal('modal-orario')" class="group relative bg-gradient-to-br from-blue-600 to-indigo-700 hover:from-blue-500 hover:to-indigo-600 text-white p-4 rounded-2xl shadow-xl border border-indigo-400/30 transition-all transform active:scale-95 flex items-center space-x-4 text-left">
+                        <div class="bg-white/15 p-3.5 rounded-xl text-2xl group-hover:scale-110 transition-transform shadow-inner shrink-0">
                             📅
                         </div>
                         <div>
-                            <h3 class="font-bold text-sm">Orario Scolastico</h3>
-                            <p class="text-[11px] text-indigo-200">Quadri orari e turnazioni plessi</p>
+                            <h3 class="font-bold text-sm tracking-wide">Orario Scolastico</h3>
+                            <p class="text-[11px] text-indigo-200 mt-0.5">Visualizza orario lezioni e PDF</p>
                         </div>
                     </button>
 
                     <!-- Tasto 2: Orario Segreteria -->
-                    <button onclick="openModal('modal-segreteria')" class="group relative bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white p-3.5 rounded-xl shadow-lg border border-emerald-400/30 transition-all transform active:scale-95 flex items-center space-x-3.5 text-left">
-                        <div class="bg-white/10 p-2.5 rounded-lg text-xl group-hover:scale-110 transition-transform">
+                    <button onclick="openModal('modal-segreteria')" class="group relative bg-gradient-to-br from-emerald-600 to-teal-700 hover:from-emerald-500 hover:to-teal-600 text-white p-4 rounded-2xl shadow-xl border border-emerald-400/30 transition-all transform active:scale-95 flex items-center space-x-4 text-left">
+                        <div class="bg-white/15 p-3.5 rounded-xl text-2xl group-hover:scale-110 transition-transform shadow-inner shrink-0">
                             🏢
                         </div>
                         <div>
-                            <h3 class="font-bold text-sm">Orario Segreteria</h3>
-                            <p class="text-[11px] text-emerald-200">Ricevimento pubblico e sportello</p>
+                            <h3 class="font-bold text-sm tracking-wide">Orario Segreteria</h3>
+                            <p class="text-[11px] text-emerald-200 mt-0.5">Ricevimento pubblico e sportello</p>
                         </div>
                     </button>
 
                     <!-- Tasto 3: Mappa della Scuola -->
-                    <button onclick="openModal('modal-mappa')" class="group relative bg-gradient-to-r from-amber-600 to-orange-600 hover:from-amber-500 hover:to-orange-500 text-white p-3.5 rounded-xl shadow-lg border border-amber-400/30 transition-all transform active:scale-95 flex items-center space-x-3.5 text-left">
-                        <div class="bg-white/10 p-2.5 rounded-lg text-xl group-hover:scale-110 transition-transform">
+                    <button onclick="openModal('modal-mappa')" class="group relative bg-gradient-to-br from-amber-600 to-orange-700 hover:from-amber-500 hover:to-orange-600 text-white p-4 rounded-2xl shadow-xl border border-amber-400/30 transition-all transform active:scale-95 flex items-center space-x-4 text-left">
+                        <div class="bg-white/15 p-3.5 rounded-xl text-2xl group-hover:scale-110 transition-transform shadow-inner shrink-0">
                             🗺️
                         </div>
                         <div>
-                            <h3 class="font-bold text-sm">Mappa della Scuola</h3>
-                            <p class="text-[11px] text-amber-200">Plesso King & Plesso Mila</p>
+                            <h3 class="font-bold text-sm tracking-wide">Mappa della Scuola</h3>
+                            <p class="text-[11px] text-amber-200 mt-0.5">Plesso King & Plesso Mila</p>
                         </div>
                     </button>
 
                 </div>
 
-                <div class="bg-slate-900/80 p-3 rounded-xl border border-slate-700/60 text-center">
-                    <p class="text-[11px] text-slate-400">Toccare un riquadro per aprire la sezione.</p>
+                <div class="bg-slate-950/70 p-3.5 rounded-2xl border border-slate-800 text-center">
+                    <p class="text-[11px] text-slate-400 font-medium">Toccare un riquadro per aprire la sezione.</p>
                 </div>
             </div>
 
@@ -181,36 +184,116 @@
 
     </main>
 
-    <!-- MODALI -->
-    <div id="modal-orario" class="fixed inset-0 bg-black/80 backdrop-blur-sm hidden z-50 flex items-center justify-center p-8">
-        <div class="bg-slate-800 border border-slate-700 w-full max-w-3xl rounded-2xl shadow-2xl overflow-hidden flex flex-col max-h-[85vh]">
-            <div class="bg-indigo-900 px-6 py-4 flex justify-between items-center border-b border-indigo-800">
-                <h3 class="text-lg font-bold text-white">📅 Orario Scolastico • I.C. "King-Mila"</h3>
-                <button onclick="closeModal('modal-orario')" class="text-slate-300 hover:text-white text-xl font-bold px-3 py-1 rounded-lg bg-indigo-950">&times;</button>
+    <!-- MODALE ORARIO SCOLASTICO CON VISUALIZZAZIONE DOCUMENTO / PDF -->
+    <div id="modal-orario" class="fixed inset-0 bg-black/80 backdrop-blur-md hidden z-50 flex items-center justify-center p-8">
+        <div class="bg-slate-900 border border-slate-800 w-full max-w-4xl rounded-3xl shadow-2xl overflow-hidden flex flex-col max-h-[90vh]">
+            <div class="bg-indigo-950 px-6 py-4 flex justify-between items-center border-b border-indigo-900/60">
+                <h3 class="text-base font-bold text-white flex items-center space-x-2">
+                    <span>📅 Orario Scolastico Ufficiale • I.C. "King-Mila"</span>
+                </h3>
+                <div class="flex items-center space-x-3">
+                    <a href="https://docs.google.com/document/d/1pPPADa21X6sb0k_HMtVf_dz63H024Y3HzyyA64qf8KY/edit?usp=drivesdk" target="_blank" class="bg-indigo-600 hover:bg-indigo-500 text-white text-xs px-3.5 py-1.5 rounded-xl font-semibold transition shadow">
+                        📥 Apri / Scarica PDF
+                    </a>
+                    <button onclick="closeModal('modal-orario')" class="text-slate-300 hover:text-white text-xl font-bold px-3 py-1 rounded-xl bg-indigo-900/50">&times;</button>
+                </div>
             </div>
             <div class="p-6 overflow-y-auto space-y-4 text-slate-300 text-sm">
-                <div class="grid grid-cols-2 gap-4">
-                    <div class="bg-slate-900 p-4 rounded-xl border border-slate-700">
-                        <h4 class="font-bold text-indigo-300 mb-1">Plesso Centrale "King" (Via Germonio 12)</h4>
-                        <p class="text-xs text-slate-400">Secondaria di I Grado • Ingresso 08:00 - Uscita 14:00</p>
+                <div class="bg-slate-950 p-5 rounded-2xl border border-slate-800 space-y-3">
+                    <div class="flex justify-between items-center border-b border-slate-800 pb-3">
+                        <div>
+                            <h4 class="font-bold text-indigo-300 text-base">Plesso Centrale "King" (Via Germonio 12)</h4>
+                            <p class="text-xs text-slate-400">Scuola Secondaria di I Grado • Quadro Orario Ufficiale</p>
+                        </div>
+                        <span class="text-xs bg-indigo-900/80 text-indigo-200 px-3 py-1 rounded-lg font-semibold">Anno Scolastico 2026/2027</span>
                     </div>
-                    <div class="bg-slate-900 p-4 rounded-xl border border-slate-700">
-                        <h4 class="font-bold text-indigo-300 mb-1">Plesso "Agazzi / Mila" (Via Chambery 33)</h4>
-                        <p class="text-xs text-slate-400">Scuola Primaria • Orario curricolare e moduli</p>
+                    
+                    <!-- Tabella Orario Integrata -->
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-left border-collapse text-xs">
+                            <thead>
+                                <tr class="bg-slate-900 text-indigo-300 border-b border-slate-800">
+                                    <th class="p-2.5">Classe</th>
+                                    <th class="p-2.5">8:00</th>
+                                    <th class="p-2.5">9:00</th>
+                                    <th class="p-2.5">10:00</th>
+                                    <th class="p-2.5 text-center">Intervallo</th>
+                                    <th class="p-2.5">11:15</th>
+                                    <th class="p-2.5">12:10</th>
+                                </tr>
+                            </thead>
+                            <tbody class="divide-y divide-slate-800 text-slate-300">
+                                <tr>
+                                    <td class="p-2.5 font-bold text-indigo-200">1^A</td>
+                                    <td class="p-2.5 text-slate-500">-</td>
+                                    <td class="p-2.5">Salone</td>
+                                    <td class="p-2.5">Salone</td>
+                                    <td class="p-2.5 text-center text-amber-400 font-medium">P. 1, atrio</td>
+                                    <td class="p-2.5">Lettere 2</td>
+                                    <td class="p-2.5">Lettere 2</td>
+                                </tr>
+                                <tr>
+                                    <td class="p-2.5 font-bold text-indigo-200">2^A</td>
+                                    <td class="p-2.5">Lettere 3</td>
+                                    <td class="p-2.5">Lettere 3</td>
+                                    <td class="p-2.5">Musica</td>
+                                    <td class="p-2.5 text-center text-amber-400 font-medium">P. 1, corr. sin.</td>
+                                    <td class="p-2.5">Matematica 1</td>
+                                    <td class="p-2.5">Matematica 1</td>
+                                </tr>
+                                <tr>
+                                    <td class="p-2.5 font-bold text-indigo-200">3^A</td>
+                                    <td class="p-2.5 text-slate-500">-</td>
+                                    <td class="p-2.5">Matematica 2</td>
+                                    <td class="p-2.5">Arte</td>
+                                    <td class="p-2.5 text-center text-amber-400 font-medium">P. 1, corr. sin.</td>
+                                    <td class="p-2.5">Matematica 2</td>
+                                    <td class="p-2.5">Musica</td>
+                                </tr>
+                                <tr>
+                                    <td class="p-2.5 font-bold text-indigo-200">1^B</td>
+                                    <td class="p-2.5 text-slate-500">-</td>
+                                    <td class="p-2.5">Salone</td>
+                                    <td class="p-2.5">Salone</td>
+                                    <td class="p-2.5 text-center text-amber-400 font-medium">P. terra</td>
+                                    <td class="p-2.5">Lettere 1</td>
+                                    <td class="p-2.5">Lettere 1</td>
+                                </tr>
+                                <tr>
+                                    <td class="p-2.5 font-bold text-indigo-200">2^B</td>
+                                    <td class="p-2.5 text-slate-500">-</td>
+                                    <td class="p-2.5 text-slate-500">-</td>
+                                    <td class="p-2.5">Lettere 2</td>
+                                    <td class="p-2.5 text-center text-amber-400 font-medium">P. 1, corr. des.</td>
+                                    <td class="p-2.5">Musica</td>
+                                    <td class="p-2.5">Francese</td>
+                                </tr>
+                                <tr>
+                                    <td class="p-2.5 font-bold text-indigo-200">3^B</td>
+                                    <td class="p-2.5">Inglese</td>
+                                    <td class="p-2.5">Musica</td>
+                                    <td class="p-2.5">Lettere 3</td>
+                                    <td class="p-2.5 text-center text-amber-400 font-medium">P. terra</td>
+                                    <td class="p-2.5">Ed. motoria</td>
+                                    <td class="p-2.5">Tecnologia</td>
+                                </tr>
+                            </tbody>
+                        </table>
                     </div>
                 </div>
             </div>
         </div>
     </div>
 
-    <div id="modal-segreteria" class="fixed inset-0 bg-black/80 backdrop-blur-sm hidden z-50 flex items-center justify-center p-8">
-        <div class="bg-slate-800 border border-slate-700 w-full max-w-3xl rounded-2xl shadow-2xl overflow-hidden flex flex-col max-h-[85vh]">
-            <div class="bg-emerald-900 px-6 py-4 flex justify-between items-center border-b border-emerald-800">
-                <h3 class="text-lg font-bold text-white">🏢 Orari e Sportello Segreteria</h3>
-                <button onclick="closeModal('modal-segreteria')" class="text-slate-300 hover:text-white text-xl font-bold px-3 py-1 rounded-lg bg-emerald-950">&times;</button>
+    <!-- MODALE ORARIO SEGRETERIA -->
+    <div id="modal-segreteria" class="fixed inset-0 bg-black/80 backdrop-blur-md hidden z-50 flex items-center justify-center p-8">
+        <div class="bg-slate-900 border border-slate-800 w-full max-w-3xl rounded-3xl shadow-2xl overflow-hidden flex flex-col max-h-[85vh]">
+            <div class="bg-emerald-950 px-6 py-4 flex justify-between items-center border-b border-emerald-900/60">
+                <h3 class="text-base font-bold text-white">🏢 Orari e Sportello Segreteria</h3>
+                <button onclick="closeModal('modal-segreteria')" class="text-slate-300 hover:text-white text-xl font-bold px-3 py-1 rounded-xl bg-emerald-900/50">&times;</button>
             </div>
             <div class="p-6 overflow-y-auto space-y-3 text-slate-300 text-sm">
-                <div class="bg-slate-900 p-4 rounded-xl border border-slate-700 space-y-2">
+                <div class="bg-slate-950 p-4 rounded-2xl border border-slate-800 space-y-2">
                     <h4 class="font-bold text-emerald-300">Ricevimento al Pubblico</h4>
                     <p class="text-xs"><strong>Lunedì, Mercoledì e Venerdì:</strong> 11:00 - 13:00</p>
                     <p class="text-xs"><strong>Martedì e Giovedì:</strong> 15:00 - 17:00</p>
@@ -219,19 +302,20 @@
         </div>
     </div>
 
-    <div id="modal-mappa" class="fixed inset-0 bg-black/80 backdrop-blur-sm hidden z-50 flex items-center justify-center p-8">
-        <div class="bg-slate-800 border border-slate-700 w-full max-w-3xl rounded-2xl shadow-2xl overflow-hidden flex flex-col max-h-[85vh]">
-            <div class="bg-amber-900 px-6 py-4 flex justify-between items-center border-b border-amber-800">
-                <h3 class="text-lg font-bold text-white">🗺️ Mappa dei Plessi</h3>
-                <button onclick="closeModal('modal-mappa')" class="text-slate-300 hover:text-white text-xl font-bold px-3 py-1 rounded-lg bg-amber-950">&times;</button>
+    <!-- MODALE MAPPA DELLA SCUOLA -->
+    <div id="modal-mappa" class="fixed inset-0 bg-black/80 backdrop-blur-md hidden z-50 flex items-center justify-center p-8">
+        <div class="bg-slate-900 border border-slate-800 w-full max-w-3xl rounded-3xl shadow-2xl overflow-hidden flex flex-col max-h-[85vh]">
+            <div class="bg-amber-950 px-6 py-4 flex justify-between items-center border-b border-amber-900/60">
+                <h3 class="text-base font-bold text-white">🗺️ Mappa dei Plessi</h3>
+                <button onclick="closeModal('modal-mappa')" class="text-slate-300 hover:text-white text-xl font-bold px-3 py-1 rounded-xl bg-amber-900/50">&times;</button>
             </div>
             <div class="p-6 overflow-y-auto space-y-4 text-slate-300 text-sm">
                 <div class="grid grid-cols-2 gap-4">
-                    <div class="bg-slate-900 p-4 rounded-xl border border-slate-700">
+                    <div class="bg-slate-950 p-4 rounded-2xl border border-slate-800">
                         <h4 class="font-bold text-amber-300 mb-1">Plesso King</h4>
                         <p class="text-xs text-slate-400">📍 Via Germonio 12, Torino</p>
                     </div>
-                    <div class="bg-slate-900 p-4 rounded-xl border border-slate-700">
+                    <div class="bg-slate-950 p-4 rounded-2xl border border-slate-800">
                         <h4 class="font-bold text-amber-300 mb-1">Plesso Mila</h4>
                         <p class="text-xs text-slate-400">📍 Via Chambery 33, Torino</p>
                     </div>
@@ -287,13 +371,13 @@
             container.innerHTML = '';
             activeEvents.forEach(ev => {
                 container.innerHTML += `
-                    <div class="bg-slate-900/70 p-3 rounded-xl border border-slate-700/60 flex items-center justify-between">
+                    <div class="bg-slate-950/70 p-3 rounded-xl border border-slate-800 flex items-center justify-between">
                         <div>
-                            <span class="text-[10px] bg-indigo-900 text-indigo-200 px-2 py-0.5 rounded font-semibold">${ev.dataInizio}</span>
-                            <h4 class="font-semibold text-xs text-white mt-1">${ev.titolo}</h4>
-                            <p class="text-[11px] text-slate-400">📍 ${ev.luogo}</p>
+                            <span class="text-[10px] bg-indigo-950 text-indigo-200 px-2.5 py-0.5 rounded font-semibold border border-indigo-800/60">${ev.dataInizio}</span>
+                            <h4 class="font-semibold text-xs text-white mt-1.5">${ev.titolo}</h4>
+                            <p class="text-[11px] text-slate-400 mt-0.5">📍 ${ev.luogo}</p>
                         </div>
-                        <span class="text-[11px] bg-emerald-900/80 text-emerald-300 px-2 py-0.5 rounded-full font-medium">${ev.stato}</span>
+                        <span class="text-[11px] bg-emerald-950 text-emerald-300 px-2.5 py-1 rounded-full font-medium border border-emerald-800/60">${ev.stato}</span>
                     </div>
                 `;
             });
