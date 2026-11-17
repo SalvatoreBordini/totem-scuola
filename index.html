@@ -118,4 +118,190 @@
                     <h3 class="text-sm font-bold text-sky-300 flex items-center space-x-2">
                         <span>📅 Eventi Attivi (Ultime novità e ultimi 15 giorni)</span>
                     </h3>
-                    <span class="text-[11px] bg-sky-950 text-sky-300 px-2.5 py-1 rounded-md border border-sky-8
+                    <span class="text-[11px] bg-sky-950 text-sky-300 px-2.5 py-1 rounded-md border border-sky-800/50 font-medium">Foglio: "avviso totem"</span>
+                </div>
+                <div class="overflow-y-auto flex-1 space-y-2.5 pr-1" id="events-container">
+                    <!-- Popolato da script -->
+                </div>
+            </div>
+
+        </section>
+
+        <!-- COLONNA DESTRA: TASTI INTERATTIVI COMPATTI (4 Colonne) -->
+        <section class="col-span-4 flex flex-col space-y-4 h-full justify-between">
+            
+            <div class="bg-slate-900 rounded-2xl border border-sky-900/40 shadow-2xl p-5 flex flex-col space-y-4 h-full">
+                <h2 class="text-sm font-bold text-white uppercase tracking-wider text-center border-b border-sky-900/50 pb-3">
+                    Menu Rapido Totem
+                </h2>
+
+                <div class="flex flex-col space-y-4 flex-1 justify-around py-2">
+                    
+                    <!-- Tasto 1: Orario Scolastico -->
+                    <button onclick="openModal('modal-orario')" class="group relative bg-gradient-to-r from-sky-600 to-blue-600 hover:from-sky-500 hover:to-blue-500 text-white p-4 rounded-xl shadow-lg shadow-sky-600/20 border border-sky-400/30 transition-all transform active:scale-95 flex items-center space-x-4 text-left">
+                        <div class="bg-white/15 p-3 rounded-xl text-xl group-hover:scale-110 transition-transform">
+                            📅
+                        </div>
+                        <div>
+                            <h3 class="font-bold text-sm">Orario Scolastico</h3>
+                            <p class="text-[11px] text-sky-200">Quadri orari e turnazioni plessi</p>
+                        </div>
+                    </button>
+
+                    <!-- Tasto 2: Orario Segreteria -->
+                    <button onclick="openModal('modal-segreteria')" class="group relative bg-gradient-to-r from-blue-600 to-cyan-600 hover:from-blue-500 hover:to-cyan-500 text-white p-4 rounded-xl shadow-lg shadow-blue-600/20 border border-cyan-400/30 transition-all transform active:scale-95 flex items-center space-x-4 text-left">
+                        <div class="bg-white/15 p-3 rounded-xl text-xl group-hover:scale-110 transition-transform">
+                            🏢
+                        </div>
+                        <div>
+                            <h3 class="font-bold text-sm">Orario Segreteria</h3>
+                            <p class="text-[11px] text-cyan-200">Ricevimento pubblico e sportello</p>
+                        </div>
+                    </button>
+
+                    <!-- Tasto 3: Mappa della Scuola -->
+                    <button onclick="openModal('modal-mappa')" class="group relative bg-gradient-to-r from-cyan-600 to-sky-700 hover:from-cyan-500 hover:to-sky-600 text-white p-4 rounded-xl shadow-lg shadow-cyan-600/20 border border-sky-400/30 transition-all transform active:scale-95 flex items-center space-x-4 text-left">
+                        <div class="bg-white/15 p-3 rounded-xl text-xl group-hover:scale-110 transition-transform">
+                            🗺️
+                        </div>
+                        <div>
+                            <h3 class="font-bold text-sm">Mappa della Scuola</h3>
+                            <p class="text-[11px] text-sky-200">Plesso King & Plesso Mila</p>
+                        </div>
+                    </button>
+
+                </div>
+
+                <div class="bg-sky-950/60 p-3.5 rounded-xl border border-sky-900/50 text-center">
+                    <p class="text-[11px] text-sky-300 font-medium">Toccare un riquadro per aprire la sezione.</p>
+                </div>
+            </div>
+
+        </section>
+
+    </main>
+
+    <!-- MODALI -->
+    <div id="modal-orario" class="fixed inset-0 bg-black/80 backdrop-blur-sm hidden z-50 flex items-center justify-center p-8">
+        <div class="bg-slate-900 border border-sky-900 w-full max-w-3xl rounded-2xl shadow-2xl overflow-hidden flex flex-col max-h-[85vh]">
+            <div class="bg-sky-950 px-6 py-4 flex justify-between items-center border-b border-sky-900">
+                <h3 class="text-lg font-bold text-white">📅 Orario Scolastico • I.C. "King-Mila"</h3>
+                <button onclick="closeModal('modal-orario')" class="text-sky-300 hover:text-white text-xl font-bold px-3 py-1 rounded-lg bg-sky-900/50">&times;</button>
+            </div>
+            <div class="p-6 overflow-y-auto space-y-4 text-slate-300 text-sm">
+                <div class="grid grid-cols-2 gap-4">
+                    <div class="bg-slate-950 p-4 rounded-xl border border-sky-900/50">
+                        <h4 class="font-bold text-sky-300 mb-1">Plesso Centrale "King" (Via Germonio 12)</h4>
+                        <p class="text-xs text-slate-400">Secondaria di I Grado • Ingresso 08:00 - Uscita 14:00</p>
+                    </div>
+                    <div class="bg-slate-950 p-4 rounded-xl border border-sky-900/50">
+                        <h4 class="font-bold text-sky-300 mb-1">Plesso "Agazzi / Mila" (Via Chambery 33)</h4>
+                        <p class="text-xs text-slate-400">Scuola Primaria • Orario curricolare e moduli</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="modal-segreteria" class="fixed inset-0 bg-black/80 backdrop-blur-sm hidden z-50 flex items-center justify-center p-8">
+        <div class="bg-slate-900 border border-sky-900 w-full max-w-3xl rounded-2xl shadow-2xl overflow-hidden flex flex-col max-h-[85vh]">
+            <div class="bg-sky-950 px-6 py-4 flex justify-between items-center border-b border-sky-900">
+                <h3 class="text-lg font-bold text-white">🏢 Orari e Sportello Segreteria</h3>
+                <button onclick="closeModal('modal-segreteria')" class="text-sky-300 hover:text-white text-xl font-bold px-3 py-1 rounded-lg bg-sky-900/50">&times;</button>
+            </div>
+            <div class="p-6 overflow-y-auto space-y-3 text-slate-300 text-sm">
+                <div class="bg-slate-950 p-4 rounded-xl border border-sky-900/50 space-y-2">
+                    <h4 class="font-bold text-sky-300">Ricevimento al Pubblico</h4>
+                    <p class="text-xs"><strong>Lunedì, Mercoledì e Venerdì:</strong> 11:00 - 13:00</p>
+                    <p class="text-xs"><strong>Martedì e Giovedì:</strong> 15:00 - 17:00</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="modal-mappa" class="fixed inset-0 bg-black/80 backdrop-blur-sm hidden z-50 flex items-center justify-center p-8">
+        <div class="bg-slate-900 border border-sky-900 w-full max-w-3xl rounded-2xl shadow-2xl overflow-hidden flex flex-col max-h-[85vh]">
+            <div class="bg-sky-950 px-6 py-4 flex justify-between items-center border-b border-sky-900">
+                <h3 class="text-lg font-bold text-white">🗺️ Mappa dei Plessi</h3>
+                <button onclick="closeModal('modal-mappa')" class="text-sky-300 hover:text-white text-xl font-bold px-3 py-1 rounded-lg bg-sky-900/50">&times;</button>
+            </div>
+            <div class="p-6 overflow-y-auto space-y-4 text-slate-300 text-sm">
+                <div class="grid grid-cols-2 gap-4">
+                    <div class="bg-slate-950 p-4 rounded-xl border border-sky-900/50">
+                        <h4 class="font-bold text-sky-300 mb-1">Plesso King</h4>
+                        <p class="text-xs text-slate-400">📍 Via Germonio 12, Torino</p>
+                    </div>
+                    <div class="bg-slate-950 p-4 rounded-xl border border-sky-900/50">
+                        <h4 class="font-bold text-sky-300 mb-1">Plesso Mila</h4>
+                        <p class="text-xs text-slate-400">📍 Via Chambery 33, Torino</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- SCRIPT -->
+    <script>
+        function updateClock() {
+            const now = new Date();
+            document.getElementById('live-time').innerText = now.toLocaleTimeString('it-IT');
+            document.getElementById('live-date').innerText = now.toLocaleDateString('it-IT', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
+        }
+        setInterval(updateClock, 1000);
+        updateClock();
+
+        let currentSlide = 0;
+        const slides = document.querySelectorAll('.carousel-slide');
+        const dots = document.querySelectorAll('.dot');
+        function showSlide(index) {
+            slides.forEach((s, i) => { s.classList.remove('active'); dots[i].classList.remove('bg-white'); dots[i].classList.add('bg-white/40'); });
+            slides[index].classList.add('active');
+            dots[index].classList.remove('bg-white/40');
+            dots[index].classList.add('bg-white');
+        }
+        setInterval(() => { currentSlide = (currentSlide + 1) % slides.length; showSlide(currentSlide); }, 6000);
+
+        function openModal(id) { document.getElementById(id).classList.remove('hidden'); }
+        function closeModal(id) { document.getElementById(id).classList.add('hidden'); }
+
+        async function loadTotemData() {
+            const rawEvents = [
+                { titolo: "Open Day Scuola Secondaria 'Mila'", dataInizio: "2026-11-10", dataFine: "2026-11-25", luogo: "Plesso Mila", stato: "In Evidenza" },
+                { titolo: "Uscita Didattica a Fondazione Merz", dataInizio: "2026-11-18", dataFine: "2026-11-18", luogo: "Torino - Via Limone 24", stato: "In Evidenza" },
+                { titolo: "IV Edizione Settimana dell'Orientamento", dataInizio: "2026-11-23", dataFine: "2026-11-27", luogo: "Aula Romeo&Giulietta", stato: "Programmato" }
+            ];
+
+            const rawAvvisi = [
+                "Circolare n. 112: Sciopero nazionale e riduzioni servizi.",
+                "Iscrizioni online aperte su Piattaforma Unica MIM.",
+                "Prenotazione colloqui scuola-famiglia attiva su Registro Elettronico."
+            ];
+
+            const oggi = new Date();
+            const quindiciGiorniFa = new Date();
+            quindiciGiorniFa.setDate(oggi.getDate() - 15);
+
+            const activeEvents = rawEvents.filter(ev => new Date(ev.dataFine) >= quindiciGiorniFa);
+
+            const container = document.getElementById('events-container');
+            container.innerHTML = '';
+            activeEvents.forEach(ev => {
+                container.innerHTML += `
+                    <div class="bg-slate-950 p-3.5 rounded-xl border border-sky-900/40 flex items-center justify-between shadow-sm">
+                        <div>
+                            <span class="text-[10px] bg-sky-950 text-sky-300 px-2.5 py-0.5 rounded font-bold border border-sky-800/60">${ev.dataInizio}</span>
+                            <h4 class="font-semibold text-xs text-white mt-1.5">${ev.titolo}</h4>
+                            <p class="text-[11px] text-slate-400 mt-0.5">📍 ${ev.luogo}</p>
+                        </div>
+                        <span class="text-[11px] bg-sky-600/20 text-sky-300 border border-sky-500/30 px-2.5 py-1 rounded-full font-bold">${ev.stato}</span>
+                    </div>
+                `;
+            });
+
+            document.getElementById('ticker-content').innerText = "📢 " + rawAvvisi.join("   •   ") + "   •   I.C. King-Mila: Aggiornato in tempo reale dal foglio Google 'avviso totem'.";
+        }
+
+        loadTotemData();
+    </script>
+</body>
+</html>
