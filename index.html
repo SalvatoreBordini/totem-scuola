@@ -3,15 +3,21 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Totem Interattivo - I.C. "King-Mila"</title>
+    <title>Totem Interattivo 75" - I.C. "King-Mila" Torino</title>
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome per icone chiare ad alto contrasto -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
         body { font-family: 'Inter', sans-serif; }
         .carousel-slide { display: none; }
-        .carousel-slide.active { display: block; }
-        /* Animazione Ticker Scorrevole */
+        .carousel-slide.active { display: block; animation: fadeIn 0.6s ease-in-out; }
+        @keyframes fadeIn {
+            from { opacity: 0.4; }
+            to { opacity: 1; }
+        }
+        /* Animazione Ticker Scorrevole Orizzontale */
         @keyframes ticker {
             0% { transform: translateX(100%); }
             100% { transform: translateX(-100%); }
@@ -19,164 +25,210 @@
         .animate-ticker {
             display: inline-block;
             white-space: nowrap;
-            animation: ticker 35s linear infinite;
+            animation: ticker 38s linear infinite;
         }
         .animate-ticker:hover {
             animation-play-state: paused;
         }
+        /* Scrollbar personalizzata discreta */
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: #0f172a; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb { background: #334155; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: #475569; }
     </style>
 </head>
 <body class="bg-slate-950 text-slate-100 h-screen w-screen overflow-hidden flex flex-col select-none">
 
-    <!-- HEADER ISTITUTO -->
-    <header class="bg-slate-900/90 backdrop-blur-md border-b border-slate-800 px-8 py-3.5 flex justify-between items-center shadow-xl shrink-0">
+    <!-- HEADER ISTITUZIONALE -->
+    <header class="bg-slate-900/95 backdrop-blur-md border-b border-slate-800 px-8 py-3 flex justify-between items-center shadow-xl shrink-0">
         <div class="flex items-center space-x-4">
-            <div class="bg-gradient-to-br from-indigo-500 to-indigo-700 text-white p-3 rounded-2xl font-black text-xl shadow-lg shadow-indigo-500/20">
+            <div class="bg-gradient-to-br from-indigo-500 to-indigo-700 text-white w-12 h-12 rounded-2xl flex items-center justify-center font-black text-xl shadow-lg shadow-indigo-500/20 border border-indigo-400/30">
                 KM
             </div>
             <div>
-                <h1 class="text-xl font-extrabold tracking-tight text-white">Istituto Comprensivo "King-Mila"</h1>
-                <p class="text-xs text-indigo-400 font-semibold uppercase tracking-wider">Torino • Totem Informativo Digitale</p>
+                <div class="flex items-center space-x-3">
+                    <h1 class="text-xl font-extrabold tracking-tight text-white">Istituto Comprensivo "King-Mila"</h1>
+                    <span class="bg-indigo-950 text-indigo-300 border border-indigo-700/50 text-[11px] font-bold px-2.5 py-0.5 rounded-full uppercase tracking-wider">Torino</span>
+                </div>
+                <p class="text-xs text-slate-400 font-medium mt-0.5">
+                    <i class="fa-solid fa-location-dot text-amber-400 mr-1"></i> Sede Centrale Via Germonio 12
+                </p>
             </div>
         </div>
-        <!-- Orologio e Data in tempo reale -->
-        <div class="text-right bg-slate-900/80 px-4 py-2 rounded-xl border border-slate-800 shadow-inner">
-            <div id="live-time" class="text-xl font-extrabold text-indigo-300 font-mono tracking-wide">00:00:00</div>
-            <div id="live-date" class="text-xs text-slate-400 capitalize font-medium">Caricamento data...</div>
+
+        <!-- Stato Sincronizzazione Google Fogli + Orologio -->
+        <div class="flex items-center space-x-4">
+            <!-- Indicatore Sync Google Sheets -->
+            <div class="flex items-center space-x-2 bg-slate-950/90 border border-slate-800 px-3.5 py-2 rounded-xl">
+                <span id="sync-dot" class="h-2.5 w-2.5 rounded-full bg-emerald-400 animate-pulse"></span>
+                <span id="sync-status" class="text-xs font-semibold text-slate-300">Sincronizzato con Google Fogli</span>
+                <button onclick="loadTotemData(true)" title="Aggiorna ora dal foglio Google" class="ml-1 text-slate-400 hover:text-indigo-300 transition active:scale-90 p-1">
+                    <i id="sync-icon" class="fa-solid fa-rotate text-xs"></i>
+                </button>
+            </div>
+
+            <!-- Orologio e Data in tempo reale -->
+            <div class="text-right bg-slate-950/90 px-4 py-1.5 rounded-xl border border-slate-800 shadow-inner">
+                <div id="live-time" class="text-xl font-extrabold text-indigo-300 font-mono tracking-wide leading-tight">00:00:00</div>
+                <div id="live-date" class="text-[11px] text-slate-400 capitalize font-medium">Caricamento data...</div>
+            </div>
         </div>
     </header>
 
-    <!-- BANNER TICKER SCORREVOLE -->
-    <div class="bg-indigo-950/90 border-b border-indigo-900/50 py-2.5 px-6 flex items-center overflow-hidden shrink-0 shadow-inner">
-        <div class="flex items-center space-x-2 mr-6 shrink-0 z-10 bg-indigo-900/80 px-3 py-1 rounded-lg border border-indigo-700/60 shadow-sm">
-            <span class="flex h-2.5 w-2.5 relative">
+    <!-- BANNER TICKER SCORREVOLE (Collegato alla scheda "Avvisi" di Google Fogli) -->
+    <div class="bg-indigo-950/95 border-b border-indigo-900/60 py-2 px-6 flex items-center overflow-hidden shrink-0 shadow-inner">
+        <div class="flex items-center space-x-2 mr-5 shrink-0 z-10 bg-indigo-900 px-3 py-1 rounded-lg border border-indigo-700/70 shadow">
+            <span class="flex h-2 w-2 relative">
                 <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-amber-400 opacity-75"></span>
-                <span class="relative inline-flex rounded-full h-2.5 w-2.5 bg-amber-500"></span>
+                <span class="relative inline-flex rounded-full h-2 w-2 bg-amber-500"></span>
             </span>
-            <span class="text-xs font-bold uppercase tracking-wider text-amber-300">AVVISI E SCADENZE</span>
+            <span class="text-xs font-extrabold uppercase tracking-wider text-amber-300">AVVISI & CIRCOLARI</span>
         </div>
         <div class="overflow-hidden whitespace-nowrap w-full">
             <div id="ticker-content" class="animate-ticker text-sm text-indigo-100 font-medium">
-                📢 Sincronizzazione in corso con il foglio Google "avviso totem"...
+                📢 Connessione al foglio Google "avviso totem" in corso...
             </div>
         </div>
     </div>
 
-    <!-- CONTENUTO PRINCIPALE -->
-    <main class="flex-1 p-6 grid grid-cols-12 gap-6 overflow-hidden relative">
+    <!-- CONTENUTO PRINCIPALE (Layout 16:9 bilanciato) -->
+    <main class="flex-1 p-5 grid grid-cols-12 gap-5 overflow-hidden relative">
 
-        <!-- COLONNA SINISTRA: FOTO & EVENTI (8 Colonne) -->
-        <section class="col-span-8 flex flex-col space-y-5 h-full overflow-hidden">
+        <!-- COLONNA SINISTRA: CAROSELLO FOTO & BACHECA EVENTI (8 Colonne) -->
+        <section class="col-span-8 flex flex-col space-y-4 h-full overflow-hidden">
             
             <!-- CAROSELLO FOTO CON DESCRIZIONE SEMPLICE -->
-            <div class="bg-slate-900 rounded-3xl border border-slate-800 shadow-2xl overflow-hidden flex flex-col h-[52%] relative group">
-                <div class="absolute top-4 left-4 z-10 bg-black/60 backdrop-blur-md px-3.5 py-1.5 rounded-full text-xs font-bold uppercase tracking-wider text-indigo-300 border border-white/10 shadow-lg">
-                    📸 Vetrina & Attività Scolastiche
+            <div class="bg-slate-900 rounded-3xl border border-slate-800 shadow-2xl overflow-hidden flex flex-col h-[48%] relative group">
+                <div class="absolute top-3.5 left-4 z-10 bg-slate-950/75 backdrop-blur-md px-3.5 py-1 rounded-full text-xs font-bold uppercase tracking-wider text-indigo-300 border border-white/10 shadow-lg">
+                    <i class="fa-solid fa-camera-retro mr-1.5 text-amber-400"></i> Vetrina & Attività Scolastiche
+                </div>
+
+                <!-- Controlli manuali carosello per touch -->
+                <div class="absolute top-3.5 right-4 z-10 flex space-x-2">
+                    <button onclick="prevSlide()" class="w-8 h-8 rounded-full bg-slate-950/70 hover:bg-indigo-600 text-white flex items-center justify-center border border-white/10 transition active:scale-90">
+                        <i class="fa-solid fa-chevron-left text-xs"></i>
+                    </button>
+                    <button onclick="nextSlide()" class="w-8 h-8 rounded-full bg-slate-950/70 hover:bg-indigo-600 text-white flex items-center justify-center border border-white/10 transition active:scale-90">
+                        <i class="fa-solid fa-chevron-right text-xs"></i>
+                    </button>
                 </div>
                 
                 <!-- Slide 1 -->
                 <div class="carousel-slide active h-full relative">
-                    <img src="https://images.unsplash.com/photo-1580582932707-520aed937b7b?auto=format&fit=crop&w=1200&q=80" alt="Scuola" class="w-full h-full object-cover">
-                    <div class="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/40 to-transparent flex flex-col justify-end p-6">
-                        <span class="text-[11px] bg-indigo-600 text-white px-2.5 py-1 rounded-md w-max mb-1.5 font-bold shadow">Attività Principale</span>
-                        <h3 class="text-2xl font-extrabold text-white mb-1">Open Day 2026/2027 • I.C. King-Mila</h3>
-                        <p class="text-sm text-slate-300 font-medium">Presentazione dell'offerta formativa, laboratori STEM e visita guidata dei plessi scolastici.</p>
+                    <img src="https://images.unsplash.com/photo-1580582932707-520aed937b7b?auto=format&fit=crop&w=1200&q=80" alt="Open Day King-Mila" class="w-full h-full object-cover">
+                    <div class="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/45 to-transparent flex flex-col justify-end p-5">
+                        <span class="text-[11px] bg-indigo-600 text-white px-2.5 py-0.5 rounded-md w-max mb-1.5 font-bold shadow">Attività Principale</span>
+                        <h3 class="text-xl font-extrabold text-white">Open Day 2026/2027 • I.C. King-Mila</h3>
+                        <p class="text-xs text-slate-300 font-medium mt-0.5">Presentazione dell'offerta formativa, laboratori STEM e visita guidata dei plessi King e Agazzi.</p>
                     </div>
                 </div>
 
                 <!-- Slide 2 -->
                 <div class="carousel-slide h-full relative">
-                    <img src="https://images.unsplash.com/photo-1509062522246-3755977927d7?auto=format&fit=crop&w=1200&q=80" alt="Laboratorio" class="w-full h-full object-cover">
-                    <div class="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/40 to-transparent flex flex-col justify-end p-6">
-                        <span class="text-[11px] bg-indigo-600 text-white px-2.5 py-1 rounded-md w-max mb-1.5 font-bold shadow">Laboratori Didattici</span>
-                        <h3 class="text-2xl font-extrabold text-white mb-1">Officina Creativa & Coding Unplugged</h3>
-                        <p class="text-sm text-slate-300 font-medium">Momenti di laboratorio pratico di logica, robotica educativa e creatività per gli alunni.</p>
+                    <img src="https://images.unsplash.com/photo-1509062522246-3755977927d7?auto=format&fit=crop&w=1200&q=80" alt="Officina Creativa" class="w-full h-full object-cover">
+                    <div class="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/45 to-transparent flex flex-col justify-end p-5">
+                        <span class="text-[11px] bg-emerald-600 text-white px-2.5 py-0.5 rounded-md w-max mb-1.5 font-bold shadow">Laboratori Didattici</span>
+                        <h3 class="text-xl font-extrabold text-white">Officina Creativa & Coding Unplugged</h3>
+                        <p class="text-xs text-slate-300 font-medium mt-0.5">Attività pratiche di robotica educativa, logica e manipolazione creativa per gli alunni.</p>
                     </div>
                 </div>
 
                 <!-- Slide 3 -->
                 <div class="carousel-slide h-full relative">
-                    <img src="https://images.unsplash.com/photo-1427504494785-3a9ca7044f45?auto=format&fit=crop&w=1200&q=80" alt="Sport" class="w-full h-full object-cover">
-                    <div class="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/40 to-transparent flex flex-col justify-end p-6">
-                        <span class="text-[11px] bg-indigo-600 text-white px-2.5 py-1 rounded-md w-max mb-1.5 font-bold shadow">Progetto Sportivo</span>
-                        <h3 class="text-2xl font-extrabold text-white mb-1">Olimpia-King • Sport e Attività Motoria</h3>
-                        <p class="text-sm text-slate-300 font-medium">Tornei interni di atletica leggera, educazione alla salute e socializzazione giovanile.</p>
+                    <img src="https://images.unsplash.com/photo-1427504494785-3a9ca7044f45?auto=format&fit=crop&w=1200&q=80" alt="Olimpia-King" class="w-full h-full object-cover">
+                    <div class="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/45 to-transparent flex flex-col justify-end p-5">
+                        <span class="text-[11px] bg-amber-600 text-white px-2.5 py-0.5 rounded-md w-max mb-1.5 font-bold shadow">Progetto Sportivo</span>
+                        <h3 class="text-xl font-extrabold text-white">Olimpia-King • Sport e Attività Motoria</h3>
+                        <p class="text-xs text-slate-300 font-medium mt-0.5">Tornei scolastici di atletica leggera, educazione al benessere e cooperazione di squadra.</p>
                     </div>
                 </div>
 
                 <!-- Indicatori Carosello -->
-                <div class="absolute bottom-4 right-4 z-10 flex space-x-2">
-                    <span class="dot h-2.5 w-2.5 rounded-full bg-white/50 cursor-pointer transition-all"></span>
-                    <span class="dot h-2.5 w-2.5 rounded-full bg-white/50 cursor-pointer transition-all"></span>
-                    <span class="dot h-2.5 w-2.5 rounded-full bg-white/50 cursor-pointer transition-all"></span>
+                <div class="absolute bottom-4 right-5 z-10 flex space-x-2">
+                    <span onclick="goToSlide(0)" class="dot h-2 w-6 rounded-full bg-white cursor-pointer transition-all"></span>
+                    <span onclick="goToSlide(1)" class="dot h-2 w-2 rounded-full bg-white/50 cursor-pointer transition-all"></span>
+                    <span onclick="goToSlide(2)" class="dot h-2 w-2 rounded-full bg-white/50 cursor-pointer transition-all"></span>
                 </div>
             </div>
 
-            <!-- EVENTI DINAMICI (Filtro ultimi 15 giorni) -->
-            <div class="bg-slate-900 rounded-3xl border border-slate-800 shadow-2xl p-5 flex-1 flex flex-col overflow-hidden">
-                <div class="flex justify-between items-center mb-3">
-                    <h3 class="text-sm font-bold text-indigo-300 flex items-center space-x-2">
-                        <span>📅 Eventi Attivi (Ultime novità e ultimi 15 giorni)</span>
-                    </h3>
-                    <span class="text-[11px] bg-slate-800 text-slate-300 px-3 py-1 rounded-lg border border-slate-700/60 font-medium">Foglio: "avviso totem"</span>
+            <!-- BACHECA EVENTI ATTIVI (Ultimi 15 giorni, auto-rimozione scaduti) -->
+            <div class="bg-slate-900 rounded-3xl border border-slate-800 shadow-2xl p-4 flex-1 flex flex-col overflow-hidden">
+                <div class="flex justify-between items-center mb-3 px-1">
+                    <div class="flex items-center space-x-2.5">
+                        <span class="w-2.5 h-2.5 rounded-full bg-indigo-500"></span>
+                        <h3 class="text-sm font-extrabold text-white tracking-wide">
+                            Eventi Attivi (Ultimi 15 giorni e prossimi appuntamenti)
+                        </h3>
+                    </div>
+                    <div class="flex items-center space-x-2">
+                        <span id="events-count" class="text-[11px] bg-indigo-950 text-indigo-300 border border-indigo-800/60 px-2.5 py-0.5 rounded-md font-bold">0 eventi</span>
+                        <span class="text-[11px] bg-slate-800 text-slate-400 px-2.5 py-0.5 rounded-md border border-slate-700/60 font-medium">Auto-pulizia scaduti</span>
+                    </div>
                 </div>
                 <div class="overflow-y-auto flex-1 space-y-2.5 pr-1" id="events-container">
-                    <!-- Popolato da script -->
+                    <!-- Popolato dinamicamente dalla scheda "Eventi" del Foglio Google -->
                 </div>
             </div>
 
         </section>
 
-        <!-- COLONNA DESTRA: TASTI MENU RAPIDO QUADRATI (4 Colonne) -->
-        <section class="col-span-4 flex flex-col space-y-4 h-full justify-between">
+        <!-- COLONNA DESTRA: TASTI MENU RAPIDO QUADRATI & GESTIONE FOGLIO GOOGLE (4 Colonne) -->
+        <section class="col-span-4 flex flex-col h-full justify-between">
             
-            <div class="bg-slate-900 rounded-3xl border border-slate-800 shadow-2xl p-5 flex flex-col space-y-4 h-full justify-between">
+            <div class="bg-slate-900 rounded-3xl border border-slate-800 shadow-2xl p-5 flex flex-col h-full justify-between">
                 <div>
-                    <h2 class="text-sm font-bold text-white uppercase tracking-wider text-center border-b border-slate-800 pb-3">
+                    <h2 class="text-xs font-extrabold text-slate-300 uppercase tracking-widest text-center border-b border-slate-800 pb-3">
                         Menu Rapido Totem
                     </h2>
                 </div>
 
-                <!-- Griglia Tasti Quadrati Simmetrici -->
-                <div class="grid grid-cols-1 gap-3.5 my-auto">
+                <!-- Griglia Tasti Quadrati Compatti (2x2) per lasciare ampio spazio visivo -->
+                <div class="grid grid-cols-2 gap-3.5 my-auto">
                     
-                    <!-- Tasto 1: Orario Scolastico (Collegato a visualizzazione PDF / Documento) -->
-                    <button onclick="openModal('modal-orario')" class="group relative bg-gradient-to-br from-blue-600 to-indigo-700 hover:from-blue-500 hover:to-indigo-600 text-white p-4 rounded-2xl shadow-xl border border-indigo-400/30 transition-all transform active:scale-95 flex items-center space-x-4 text-left">
-                        <div class="bg-white/15 p-3.5 rounded-xl text-2xl group-hover:scale-110 transition-transform shadow-inner shrink-0">
-                            📅
+                    <!-- Tasto Quadrato 1: Orario Scolastico -->
+                    <button onclick="openModal('modal-orario')" class="group aspect-square bg-gradient-to-br from-blue-600 to-indigo-700 hover:from-blue-500 hover:to-indigo-600 text-white p-4 rounded-2xl shadow-xl border border-indigo-400/30 transition-all transform active:scale-95 flex flex-col items-center justify-center text-center">
+                        <div class="bg-white/15 w-12 h-12 rounded-2xl flex items-center justify-center text-2xl mb-2.5 group-hover:scale-110 transition-transform shadow-inner">
+                            <i class="fa-solid fa-calendar-days"></i>
                         </div>
-                        <div>
-                            <h3 class="font-bold text-sm tracking-wide">Orario Scolastico</h3>
-                            <p class="text-[11px] text-indigo-200 mt-0.5">Visualizza orario lezioni e PDF</p>
-                        </div>
+                        <h3 class="font-extrabold text-sm leading-tight">Orario Scolastico</h3>
+                        <p class="text-[10px] text-indigo-200 mt-1 line-clamp-2">PDF orario lezioni e classi</p>
                     </button>
 
-                    <!-- Tasto 2: Orario Segreteria -->
-                    <button onclick="openModal('modal-segreteria')" class="group relative bg-gradient-to-br from-emerald-600 to-teal-700 hover:from-emerald-500 hover:to-teal-600 text-white p-4 rounded-2xl shadow-xl border border-emerald-400/30 transition-all transform active:scale-95 flex items-center space-x-4 text-left">
-                        <div class="bg-white/15 p-3.5 rounded-xl text-2xl group-hover:scale-110 transition-transform shadow-inner shrink-0">
-                            🏢
+                    <!-- Tasto Quadrato 2: Orario Segreteria -->
+                    <button onclick="openModal('modal-segreteria')" class="group aspect-square bg-gradient-to-br from-emerald-600 to-teal-700 hover:from-emerald-500 hover:to-teal-600 text-white p-4 rounded-2xl shadow-xl border border-emerald-400/30 transition-all transform active:scale-95 flex flex-col items-center justify-center text-center">
+                        <div class="bg-white/15 w-12 h-12 rounded-2xl flex items-center justify-center text-2xl mb-2.5 group-hover:scale-110 transition-transform shadow-inner">
+                            <i class="fa-solid fa-building-user"></i>
                         </div>
-                        <div>
-                            <h3 class="font-bold text-sm tracking-wide">Orario Segreteria</h3>
-                            <p class="text-[11px] text-emerald-200 mt-0.5">Ricevimento pubblico e sportello</p>
-                        </div>
+                        <h3 class="font-extrabold text-sm leading-tight">Orario Segreteria</h3>
+                        <p class="text-[10px] text-emerald-200 mt-1 line-clamp-2">Sportello pubblico e contatti</p>
                     </button>
 
-                    <!-- Tasto 3: Mappa della Scuola -->
-                    <button onclick="openModal('modal-mappa')" class="group relative bg-gradient-to-br from-amber-600 to-orange-700 hover:from-amber-500 hover:to-orange-600 text-white p-4 rounded-2xl shadow-xl border border-amber-400/30 transition-all transform active:scale-95 flex items-center space-x-4 text-left">
-                        <div class="bg-white/15 p-3.5 rounded-xl text-2xl group-hover:scale-110 transition-transform shadow-inner shrink-0">
-                            🗺️
+                    <!-- Tasto Quadrato 3: Mappa della Scuola -->
+                    <button onclick="openModal('modal-mappa')" class="group aspect-square bg-gradient-to-br from-amber-600 to-orange-700 hover:from-amber-500 hover:to-orange-600 text-white p-4 rounded-2xl shadow-xl border border-amber-400/30 transition-all transform active:scale-95 flex flex-col items-center justify-center text-center">
+                        <div class="bg-white/15 w-12 h-12 rounded-2xl flex items-center justify-center text-2xl mb-2.5 group-hover:scale-110 transition-transform shadow-inner">
+                            <i class="fa-solid fa-map-location-dot"></i>
                         </div>
-                        <div>
-                            <h3 class="font-bold text-sm tracking-wide">Mappa della Scuola</h3>
-                            <p class="text-[11px] text-amber-200 mt-0.5">Plesso King & Plesso Mila</p>
-                        </div>
+                        <h3 class="font-extrabold text-sm leading-tight">Mappa della Scuola</h3>
+                        <p class="text-[10px] text-amber-200 mt-1 line-clamp-2">Plessi King (Mila) e Agazzi</p>
                     </button>
+
+                    <!-- Tasto Quadrato 4: Gestisci Avvisi / Foglio Google -->
+                    <a href="https://docs.google.com/spreadsheets/d/1Izv-8ri8pCREwgPc6ZjF4TkihMr7Rr6p8XLrpQYZW7Q/edit?gid=0#gid=0" target="_blank" rel="noopener noreferrer" class="group aspect-square bg-gradient-to-br from-slate-800 to-slate-900 hover:from-slate-700 hover:to-slate-800 text-white p-4 rounded-2xl shadow-xl border border-slate-600/50 transition-all transform active:scale-95 flex flex-col items-center justify-center text-center">
+                        <div class="bg-emerald-500/20 text-emerald-400 w-12 h-12 rounded-2xl flex items-center justify-center text-2xl mb-2.5 group-hover:scale-110 transition-transform border border-emerald-500/30">
+                            <i class="fa-solid fa-table"></i>
+                        </div>
+                        <h3 class="font-extrabold text-sm leading-tight text-emerald-300">Foglio Google</h3>
+                        <p class="text-[10px] text-slate-400 mt-1 line-clamp-2">Gestisci Avvisi ed Eventi</p>
+                    </a>
 
                 </div>
 
-                <div class="bg-slate-950/70 p-3.5 rounded-2xl border border-slate-800 text-center">
-                    <p class="text-[11px] text-slate-400 font-medium">Toccare un riquadro per aprire la sezione.</p>
+                <!-- Box Info & Aggiornamento Rapido -->
+                <div class="bg-slate-950/80 p-3.5 rounded-2xl border border-slate-800 text-center space-y-1">
+                    <p class="text-[11px] text-slate-300 font-semibold">
+                        <i class="fa-solid fa-hand-pointer text-indigo-400 mr-1"></i> Tocca un riquadro per consultare
+                    </p>
+                    <p class="text-[10px] text-slate-500">Aggiornamento automatico ogni 2 minuti</p>
                 </div>
             </div>
 
@@ -184,97 +236,133 @@
 
     </main>
 
-    <!-- MODALE ORARIO SCOLASTICO CON VISUALIZZAZIONE DOCUMENTO / PDF -->
-    <div id="modal-orario" class="fixed inset-0 bg-black/80 backdrop-blur-md hidden z-50 flex items-center justify-center p-8">
-        <div class="bg-slate-900 border border-slate-800 w-full max-w-4xl rounded-3xl shadow-2xl overflow-hidden flex flex-col max-h-[90vh]">
+    <!-- MODALE 1: ORARIO SCOLASTICO (PDF Google Drive incorporato + Tabella rapida) -->
+    <div id="modal-orario" class="fixed inset-0 bg-black/80 backdrop-blur-md hidden z-50 flex items-center justify-center p-6">
+        <div class="bg-slate-900 border border-slate-700 w-full max-w-5xl rounded-3xl shadow-2xl overflow-hidden flex flex-col max-h-[92vh]">
             <div class="bg-indigo-950 px-6 py-4 flex justify-between items-center border-b border-indigo-900/60">
-                <h3 class="text-base font-bold text-white flex items-center space-x-2">
-                    <span>📅 Orario Scolastico Ufficiale • I.C. "King-Mila"</span>
-                </h3>
                 <div class="flex items-center space-x-3">
-                    <a href="https://docs.google.com/document/d/1pPPADa21X6sb0k_HMtVf_dz63H024Y3HzyyA64qf8KY/edit?usp=drivesdk" target="_blank" class="bg-indigo-600 hover:bg-indigo-500 text-white text-xs px-3.5 py-1.5 rounded-xl font-semibold transition shadow">
-                        📥 Apri / Scarica PDF
-                    </a>
-                    <button onclick="closeModal('modal-orario')" class="text-slate-300 hover:text-white text-xl font-bold px-3 py-1 rounded-xl bg-indigo-900/50">&times;</button>
+                    <div class="w-10 h-10 rounded-xl bg-indigo-600 flex items-center justify-center text-white text-lg">
+                        <i class="fa-solid fa-calendar-days"></i>
+                    </div>
+                    <div>
+                        <h3 class="text-base font-extrabold text-white">Orario Scolastico Ufficiale • I.C. "King-Mila"</h3>
+                        <p class="text-xs text-indigo-300">Visualizzazione documento PDF e quadro orario classi</p>
+                    </div>
+                </div>
+                <div class="flex items-center space-x-2">
+                    <button onclick="togglePdfConfig()" class="bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs px-3 py-2 rounded-xl font-semibold border border-slate-700 transition">
+                        <i class="fa-solid fa-gear mr-1 text-amber-400"></i> Configura PDF Drive
+                    </button>
+                    <button onclick="closeModal('modal-orario')" class="text-slate-300 hover:text-white text-xl font-bold px-3.5 py-1.5 rounded-xl bg-indigo-900/70 hover:bg-rose-600 transition">&times;</button>
                 </div>
             </div>
-            <div class="p-6 overflow-y-auto space-y-4 text-slate-300 text-sm">
-                <div class="bg-slate-950 p-5 rounded-2xl border border-slate-800 space-y-3">
+
+            <!-- Pannello Configurazione Rapida Link PDF Google Drive (Nascosto di default) -->
+            <div id="pdf-config-panel" class="hidden bg-slate-950 border-b border-slate-800 px-6 py-3 flex items-center space-x-3">
+                <span class="text-xs font-bold text-amber-300 shrink-0"><i class="fa-brands fa-google-drive mr-1"></i> Link o ID PDF Drive:</span>
+                <input id="pdf-drive-input" type="text" placeholder="Incolla qui il link di condivisione Google Drive del PDF orario..." class="flex-1 bg-slate-900 border border-slate-700 rounded-xl px-3 py-1.5 text-xs text-white focus:outline-none focus:border-indigo-500">
+                <button onclick="updateSchedulePdf()" class="bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-bold px-4 py-1.5 rounded-xl transition">Salva PDF</button>
+            </div>
+
+            <div class="p-6 overflow-y-auto space-y-5 text-slate-300 text-sm flex-1">
+                <!-- Selettore Scheda: PDF Incorporato vs Quadro Rapido -->
+                <div class="flex space-x-2 border-b border-slate-800 pb-3">
+                    <button id="tab-btn-pdf" onclick="switchOrarioTab('pdf')" class="bg-indigo-600 text-white px-4 py-2 rounded-xl text-xs font-bold transition">
+                        <i class="fa-solid fa-file-pdf mr-1.5"></i> Documento PDF Orario
+                    </button>
+                    <button id="tab-btn-table" onclick="switchOrarioTab('table')" class="bg-slate-800 text-slate-300 hover:bg-slate-700 px-4 py-2 rounded-xl text-xs font-bold transition">
+                        <i class="fa-solid fa-table-list mr-1.5"></i> Consultazione Rapida Classi
+                    </button>
+                </div>
+
+                <!-- Vista 1: Iframe PDF Google Drive -->
+                <div id="orario-view-pdf" class="space-y-3">
+                    <div class="bg-slate-950 rounded-2xl border border-slate-800 overflow-hidden relative h-[54vh]">
+                        <iframe id="schedule-pdf-iframe" src="https://docs.google.com/document/d/1pPPADa21X6sb0k_HMtVf_dz63H024Y3HzyyA64qf8KY/preview" class="w-full h-full border-0" allow="autoplay"></iframe>
+                    </div>
+                    <div class="flex justify-between items-center text-xs text-slate-400">
+                        <span><i class="fa-solid fa-circle-info text-indigo-400 mr-1"></i> Puoi scorrere e ingrandire il documento direttamente con il tocco.</span>
+                        <a id="schedule-external-link" href="https://docs.google.com/document/d/1pPPADa21X6sb0k_HMtVf_dz63H024Y3HzyyA64qf8KY/edit?usp=drivesdk" target="_blank" class="text-indigo-400 hover:text-indigo-300 font-bold underline">
+                            Apri documento in nuova scheda <i class="fa-solid fa-arrow-up-right-from-square ml-1"></i>
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Vista 2: Tabella Oraria di Consultazione Rapida -->
+                <div id="orario-view-table" class="hidden bg-slate-950 p-5 rounded-2xl border border-slate-800 space-y-3">
                     <div class="flex justify-between items-center border-b border-slate-800 pb-3">
                         <div>
-                            <h4 class="font-bold text-indigo-300 text-base">Plesso Centrale "King" (Via Germonio 12)</h4>
-                            <p class="text-xs text-slate-400">Scuola Secondaria di I Grado • Quadro Orario Ufficiale</p>
+                            <h4 class="font-bold text-indigo-300 text-base">Plesso Centrale "M. Mila / King" (Via Germonio 12)</h4>
+                            <p class="text-xs text-slate-400">Scuola Secondaria di I Grado • Scansione oraria giornaliera</p>
                         </div>
-                        <span class="text-xs bg-indigo-900/80 text-indigo-200 px-3 py-1 rounded-lg font-semibold">Anno Scolastico 2026/2027</span>
+                        <span class="text-xs bg-indigo-900/80 text-indigo-200 px-3 py-1 rounded-lg font-semibold">A.S. 2026/2027</span>
                     </div>
-                    
-                    <!-- Tabella Orario Integrata -->
                     <div class="overflow-x-auto">
                         <table class="w-full text-left border-collapse text-xs">
                             <thead>
                                 <tr class="bg-slate-900 text-indigo-300 border-b border-slate-800">
                                     <th class="p-2.5">Classe</th>
-                                    <th class="p-2.5">8:00</th>
-                                    <th class="p-2.5">9:00</th>
-                                    <th class="p-2.5">10:00</th>
-                                    <th class="p-2.5 text-center">Intervallo</th>
-                                    <th class="p-2.5">11:15</th>
-                                    <th class="p-2.5">12:10</th>
+                                    <th class="p-2.5">08:00 - 09:00</th>
+                                    <th class="p-2.5">09:00 - 10:00</th>
+                                    <th class="p-2.5">10:00 - 11:00</th>
+                                    <th class="p-2.5 text-center">Intervallo (11:00)</th>
+                                    <th class="p-2.5">11:15 - 12:10</th>
+                                    <th class="p-2.5">12:10 - 13:05</th>
                                 </tr>
                             </thead>
                             <tbody class="divide-y divide-slate-800 text-slate-300">
                                 <tr>
-                                    <td class="p-2.5 font-bold text-indigo-200">1^A</td>
-                                    <td class="p-2.5 text-slate-500">-</td>
+                                    <td class="p-2.5 font-bold text-indigo-200">1ª A</td>
+                                    <td class="p-2.5">Ingresso / Accogl.</td>
                                     <td class="p-2.5">Salone</td>
                                     <td class="p-2.5">Salone</td>
                                     <td class="p-2.5 text-center text-amber-400 font-medium">P. 1, atrio</td>
-                                    <td class="p-2.5">Lettere 2</td>
-                                    <td class="p-2.5">Lettere 2</td>
+                                    <td class="p-2.5">Lettere</td>
+                                    <td class="p-2.5">Lettere</td>
                                 </tr>
                                 <tr>
-                                    <td class="p-2.5 font-bold text-indigo-200">2^A</td>
-                                    <td class="p-2.5">Lettere 3</td>
-                                    <td class="p-2.5">Lettere 3</td>
+                                    <td class="p-2.5 font-bold text-indigo-200">2ª A</td>
+                                    <td class="p-2.5">Lettere</td>
+                                    <td class="p-2.5">Lettere</td>
                                     <td class="p-2.5">Musica</td>
                                     <td class="p-2.5 text-center text-amber-400 font-medium">P. 1, corr. sin.</td>
-                                    <td class="p-2.5">Matematica 1</td>
-                                    <td class="p-2.5">Matematica 1</td>
+                                    <td class="p-2.5">Matematica</td>
+                                    <td class="p-2.5">Matematica</td>
                                 </tr>
                                 <tr>
-                                    <td class="p-2.5 font-bold text-indigo-200">3^A</td>
-                                    <td class="p-2.5 text-slate-500">-</td>
-                                    <td class="p-2.5">Matematica 2</td>
-                                    <td class="p-2.5">Arte</td>
+                                    <td class="p-2.5 font-bold text-indigo-200">3ª A</td>
+                                    <td class="p-2.5">Inglese</td>
+                                    <td class="p-2.5">Matematica</td>
+                                    <td class="p-2.5">Arte e Immagine</td>
                                     <td class="p-2.5 text-center text-amber-400 font-medium">P. 1, corr. sin.</td>
-                                    <td class="p-2.5">Matematica 2</td>
+                                    <td class="p-2.5">Matematica</td>
                                     <td class="p-2.5">Musica</td>
                                 </tr>
                                 <tr>
-                                    <td class="p-2.5 font-bold text-indigo-200">1^B</td>
-                                    <td class="p-2.5 text-slate-500">-</td>
+                                    <td class="p-2.5 font-bold text-indigo-200">1ª B</td>
+                                    <td class="p-2.5">Tecnologia</td>
                                     <td class="p-2.5">Salone</td>
                                     <td class="p-2.5">Salone</td>
                                     <td class="p-2.5 text-center text-amber-400 font-medium">P. terra</td>
-                                    <td class="p-2.5">Lettere 1</td>
-                                    <td class="p-2.5">Lettere 1</td>
+                                    <td class="p-2.5">Lettere</td>
+                                    <td class="p-2.5">Lettere</td>
                                 </tr>
                                 <tr>
-                                    <td class="p-2.5 font-bold text-indigo-200">2^B</td>
-                                    <td class="p-2.5 text-slate-500">-</td>
-                                    <td class="p-2.5 text-slate-500">-</td>
-                                    <td class="p-2.5">Lettere 2</td>
+                                    <td class="p-2.5 font-bold text-indigo-200">2ª B</td>
+                                    <td class="p-2.5">Scienze</td>
+                                    <td class="p-2.5">Inglese</td>
+                                    <td class="p-2.5">Lettere</td>
                                     <td class="p-2.5 text-center text-amber-400 font-medium">P. 1, corr. des.</td>
                                     <td class="p-2.5">Musica</td>
                                     <td class="p-2.5">Francese</td>
                                 </tr>
                                 <tr>
-                                    <td class="p-2.5 font-bold text-indigo-200">3^B</td>
+                                    <td class="p-2.5 font-bold text-indigo-200">3ª B</td>
                                     <td class="p-2.5">Inglese</td>
                                     <td class="p-2.5">Musica</td>
-                                    <td class="p-2.5">Lettere 3</td>
+                                    <td class="p-2.5">Lettere</td>
                                     <td class="p-2.5 text-center text-amber-400 font-medium">P. terra</td>
-                                    <td class="p-2.5">Ed. motoria</td>
+                                    <td class="p-2.5">Ed. Motoria</td>
                                     <td class="p-2.5">Tecnologia</td>
                                 </tr>
                             </tbody>
@@ -285,107 +373,593 @@
         </div>
     </div>
 
-    <!-- MODALE ORARIO SEGRETERIA -->
-    <div id="modal-segreteria" class="fixed inset-0 bg-black/80 backdrop-blur-md hidden z-50 flex items-center justify-center p-8">
-        <div class="bg-slate-900 border border-slate-800 w-full max-w-3xl rounded-3xl shadow-2xl overflow-hidden flex flex-col max-h-[85vh]">
+    <!-- MODALE 2: ORARIO SEGRETERIA -->
+    <div id="modal-segreteria" class="fixed inset-0 bg-black/80 backdrop-blur-md hidden z-50 flex items-center justify-center p-6">
+        <div class="bg-slate-900 border border-slate-700 w-full max-w-4xl rounded-3xl shadow-2xl overflow-hidden flex flex-col max-h-[88vh]">
             <div class="bg-emerald-950 px-6 py-4 flex justify-between items-center border-b border-emerald-900/60">
-                <h3 class="text-base font-bold text-white">🏢 Orari e Sportello Segreteria</h3>
-                <button onclick="closeModal('modal-segreteria')" class="text-slate-300 hover:text-white text-xl font-bold px-3 py-1 rounded-xl bg-emerald-900/50">&times;</button>
+                <div class="flex items-center space-x-3">
+                    <div class="w-10 h-10 rounded-xl bg-emerald-600 flex items-center justify-center text-white text-lg">
+                        <i class="fa-solid fa-building-user"></i>
+                    </div>
+                    <div>
+                        <h3 class="text-base font-extrabold text-white">Orari Segreteria e Contatti Istituzionali</h3>
+                        <p class="text-xs text-emerald-300">Uffici di Segreteria Didattica e Amministrativa • Plesso Centrale Via Germonio 12</p>
+                    </div>
+                </div>
+                <button onclick="closeModal('modal-segreteria')" class="text-slate-300 hover:text-white text-xl font-bold px-3.5 py-1.5 rounded-xl bg-emerald-900/70 hover:bg-rose-600 transition">&times;</button>
             </div>
-            <div class="p-6 overflow-y-auto space-y-3 text-slate-300 text-sm">
-                <div class="bg-slate-950 p-4 rounded-2xl border border-slate-800 space-y-2">
-                    <h4 class="font-bold text-emerald-300">Ricevimento al Pubblico</h4>
-                    <p class="text-xs"><strong>Lunedì, Mercoledì e Venerdì:</strong> 11:00 - 13:00</p>
-                    <p class="text-xs"><strong>Martedì e Giovedì:</strong> 15:00 - 17:00</p>
+            <div class="p-6 overflow-y-auto grid grid-cols-1 md:grid-cols-2 gap-5 text-slate-300 text-sm">
+                <div class="bg-slate-950 p-5 rounded-2xl border border-slate-800 space-y-3">
+                    <h4 class="font-extrabold text-emerald-300 text-base flex items-center">
+                        <i class="fa-solid fa-clock mr-2"></i> Ricevimento al Pubblico
+                    </h4>
+                    <ul class="space-y-2.5 text-xs">
+                        <li class="flex justify-between border-b border-slate-800 pb-2">
+                            <span class="text-slate-400">Lunedì:</span>
+                            <strong class="text-white">11:00 - 13:00</strong>
+                        </li>
+                        <li class="flex justify-between border-b border-slate-800 pb-2">
+                            <span class="text-slate-400">Martedì (Mattina e Pomeriggio):</span>
+                            <strong class="text-white">11:00 - 13:00 | 15:00 - 17:00</strong>
+                        </li>
+                        <li class="flex justify-between border-b border-slate-800 pb-2">
+                            <span class="text-slate-400">Mercoledì:</span>
+                            <strong class="text-white">11:00 - 13:00</strong>
+                        </li>
+                        <li class="flex justify-between border-b border-slate-800 pb-2">
+                            <span class="text-slate-400">Giovedì (Pomeriggio):</span>
+                            <strong class="text-white">15:00 - 17:00</strong>
+                        </li>
+                        <li class="flex justify-between pt-0.5">
+                            <span class="text-slate-400">Venerdì:</span>
+                            <strong class="text-white">11:00 - 13:00</strong>
+                        </li>
+                    </ul>
+                </div>
+
+                <div class="bg-slate-950 p-5 rounded-2xl border border-slate-800 space-y-3 flex flex-col justify-between">
+                    <div class="space-y-3">
+                        <h4 class="font-extrabold text-emerald-300 text-base flex items-center">
+                            <i class="fa-solid fa-address-book mr-2"></i> Recapiti e Sedi
+                        </h4>
+                        <div class="bg-slate-900 p-3 rounded-xl border border-slate-800">
+                            <div class="text-[10px] font-bold text-amber-400 uppercase">Sede Centrale • Plesso "M. Mila / King"</div>
+                            <div class="text-xs text-white font-semibold mt-0.5">Via Germonio 12, 10146 Torino (TO)</div>
+                        </div>
+                        <div class="bg-slate-900 p-3 rounded-xl border border-slate-800">
+                            <div class="text-[10px] font-bold text-emerald-400 uppercase">Succursale • Plesso "Agazzi"</div>
+                            <div class="text-xs text-white font-semibold mt-0.5">Via Chambery 33, 10142 Torino (TO)</div>
+                        </div>
+                        <div class="bg-slate-900 p-3 rounded-xl border border-slate-800">
+                            <div class="text-[10px] font-bold text-indigo-400 uppercase">Telefono & Posta Elettronica</div>
+                            <div class="text-xs text-white font-semibold mt-0.5">Tel. 011 723592 • toic816001@istruzione.it</div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- MODALE MAPPA DELLA SCUOLA -->
-    <div id="modal-mappa" class="fixed inset-0 bg-black/80 backdrop-blur-md hidden z-50 flex items-center justify-center p-8">
-        <div class="bg-slate-900 border border-slate-800 w-full max-w-3xl rounded-3xl shadow-2xl overflow-hidden flex flex-col max-h-[85vh]">
+    <!-- MODALE 3: MAPPA DELLA SCUOLA -->
+    <div id="modal-mappa" class="fixed inset-0 bg-black/80 backdrop-blur-md hidden z-50 flex items-center justify-center p-6">
+        <div class="bg-slate-900 border border-slate-700 w-full max-w-5xl rounded-3xl shadow-2xl overflow-hidden flex flex-col max-h-[90vh]">
             <div class="bg-amber-950 px-6 py-4 flex justify-between items-center border-b border-amber-900/60">
-                <h3 class="text-base font-bold text-white">🗺️ Mappa dei Plessi</h3>
-                <button onclick="closeModal('modal-mappa')" class="text-slate-300 hover:text-white text-xl font-bold px-3 py-1 rounded-xl bg-amber-900/50">&times;</button>
-            </div>
-            <div class="p-6 overflow-y-auto space-y-4 text-slate-300 text-sm">
-                <div class="grid grid-cols-2 gap-4">
-                    <div class="bg-slate-950 p-4 rounded-2xl border border-slate-800">
-                        <h4 class="font-bold text-amber-300 mb-1">Plesso King</h4>
-                        <p class="text-xs text-slate-400">📍 Via Germonio 12, Torino</p>
+                <div class="flex items-center space-x-3">
+                    <div class="w-10 h-10 rounded-xl bg-amber-600 flex items-center justify-center text-white text-lg">
+                        <i class="fa-solid fa-map-location-dot"></i>
                     </div>
-                    <div class="bg-slate-950 p-4 rounded-2xl border border-slate-800">
-                        <h4 class="font-bold text-amber-300 mb-1">Plesso Mila</h4>
-                        <p class="text-xs text-slate-400">📍 Via Chambery 33, Torino</p>
+                    <div>
+                        <h3 class="text-base font-extrabold text-white">Mappa Interattiva e Distribuzione Spazi</h3>
+                        <p class="text-xs text-amber-300">Orientamento aule, laboratori e uffici nei plessi dell'Istituto</p>
+                    </div>
+                </div>
+                <button onclick="closeModal('modal-mappa')" class="text-slate-300 hover:text-white text-xl font-bold px-3.5 py-1.5 rounded-xl bg-amber-900/70 hover:bg-rose-600 transition">&times;</button>
+            </div>
+            <div class="p-6 overflow-y-auto grid grid-cols-1 md:grid-cols-2 gap-6 text-slate-300 text-sm">
+                <!-- Plesso Centrale King / Mila -->
+                <div class="bg-slate-950 p-5 rounded-2xl border-2 border-indigo-500/40 space-y-4">
+                    <div class="flex justify-between items-start">
+                        <div>
+                            <span class="text-[10px] bg-indigo-600 text-white font-extrabold px-2.5 py-0.5 rounded uppercase">Sede Centrale</span>
+                            <h4 class="font-extrabold text-white text-lg mt-1">Plesso "King / M. Mila"</h4>
+                            <p class="text-xs text-indigo-300"><i class="fa-solid fa-location-dot mr-1"></i> Via Germonio 12, Torino • Secondaria I Grado</p>
+                        </div>
+                    </div>
+
+                    <!-- Schema visivo piani -->
+                    <div class="space-y-2.5 text-xs">
+                        <div class="bg-slate-900 p-3.5 rounded-xl border border-slate-800">
+                            <div class="font-extrabold text-amber-300 mb-1">PIANO TERRA (Ingresso Principale)</div>
+                            <p class="text-slate-300">Atrio Totem Interattivo • Uffici di Presidenza e Segreteria • Aula Magna "Romeo & Giulietta" • Palestra</p>
+                        </div>
+                        <div class="bg-slate-900 p-3.5 rounded-xl border border-slate-800">
+                            <div class="font-extrabold text-indigo-300 mb-1">PRIMO PIANO (Ala Destra e Sinistra)</div>
+                            <p class="text-slate-300">Aule didattiche Classi 1ª, 2ª e 3ª (Sezioni A-B-C) • Laboratorio di Informatica e Linguistico</p>
+                        </div>
+                        <div class="bg-slate-900 p-3.5 rounded-xl border border-slate-800">
+                            <div class="font-extrabold text-emerald-300 mb-1">SECONDO PIANO</div>
+                            <p class="text-slate-300">Laboratorio STEM & Robotica • Officina Creativa e Arte • Biblioteca Scolastica</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Plesso Agazzi -->
+                <div class="bg-slate-950 p-5 rounded-2xl border-2 border-emerald-500/40 space-y-4">
+                    <div class="flex justify-between items-start">
+                        <div>
+                            <span class="text-[10px] bg-emerald-600 text-white font-extrabold px-2.5 py-0.5 rounded uppercase">Succursale</span>
+                            <h4 class="font-extrabold text-white text-lg mt-1">Plesso "Agazzi"</h4>
+                            <p class="text-xs text-emerald-300"><i class="fa-solid fa-location-dot mr-1"></i> Via Chambery 33, Torino • Infanzia & Primaria</p>
+                        </div>
+                    </div>
+
+                    <!-- Schema visivo piani -->
+                    <div class="space-y-2.5 text-xs">
+                        <div class="bg-slate-900 p-3.5 rounded-xl border border-slate-800">
+                            <div class="font-extrabold text-amber-300 mb-1">PIANO TERRA</div>
+                            <p class="text-slate-300">Sezioni Scuola dell'Infanzia • Salone polifunzionale attività motorie e ludiche • Refettorio</p>
+                        </div>
+                        <div class="bg-slate-900 p-3.5 rounded-xl border border-slate-800">
+                            <div class="font-extrabold text-indigo-300 mb-1">PRIMO PIANO</div>
+                            <p class="text-slate-300">Aule Scuola Primaria (Classi dalla 1ª alla 5ª) • Aula Coding e Biblioteca ragazzi</p>
+                        </div>
+                        <div class="bg-slate-900 p-3.5 rounded-xl border border-slate-800">
+                            <div class="font-extrabold text-emerald-300 mb-1">AREA ESTERNA</div>
+                            <p class="text-slate-300">Cortile alberato attrezzato • Campo polisportivo • Giardino e orto didattico</p>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- SCRIPT -->
+    <!-- SCRIPT DI SINCRONIZZAZIONE GOOGLE FOGLI, CAROSELLO E MODALI -->
     <script>
+        // ID del Foglio Google "avviso totem"
+        const GOOGLE_SHEET_ID = '1Izv-8ri8pCREwgPc6ZjF4TkihMr7Rr6p8XLrpQYZW7Q';
+
+        // Dati di backup locali (usati automaticamente se il foglio non è ancora condiviso pubblicamente o offline)
+        const FALLBACK_EVENTS = [
+            {
+                id: 'EV001',
+                titolo: "Open Day Scuola Secondaria 'M. Mila'",
+                categoria: "Orientamento",
+                dataInizio: "10/11/2026",
+                dataFine: "25/11/2026",
+                orario: "17:00 - 19:00",
+                luogo: "Plesso Centrale - Via Germonio 12",
+                destinatari: "Genitori e Alunni",
+                stato: "In Evidenza",
+                priorita: "Alta"
+            },
+            {
+                id: 'EV002',
+                titolo: "Uscita Didattica Classi 3A-3B a Fondazione Merz",
+                categoria: "Uscita Didattica",
+                dataInizio: "19/11/2026",
+                dataFine: "19/11/2026",
+                orario: "08:30 - 13:30",
+                luogo: "Torino - Via Limone 24",
+                destinatari: "Classi Terze",
+                stato: "In Evidenza",
+                priorita: "Normale"
+            },
+            {
+                id: 'EV003',
+                titolo: "IV Edizione Settimana dell'Orientamento",
+                categoria: "Progetto",
+                dataInizio: "23/11/2026",
+                dataFine: "27/11/2026",
+                orario: "08:00 - 14:00",
+                luogo: "Aula Magna Romeo & Giulietta",
+                destinatari: "Studenti Secondaria",
+                stato: "Programmato",
+                priorita: "Alta"
+            }
+        ];
+
+        const FALLBACK_AVVISI = [
+            {
+                id: 'AV001',
+                titolo: "Colloqui Scuola-Famiglia",
+                tipologia: "Circolare",
+                testo: "Prenotazione colloqui generali scuola-famiglia attiva sul Registro Elettronico.",
+                inizio: "01/11/2026",
+                scadenza: "30/11/2026",
+                destinatari: "Famiglie",
+                stato: "Attivo",
+                priorita: "Alta"
+            },
+            {
+                id: 'AV002',
+                titolo: "Iscrizioni Piattaforma Unica",
+                tipologia: "Segreteria",
+                testo: "Sportello di supporto iscrizioni online aperto presso la Segreteria di Via Germonio 12.",
+                inizio: "05/11/2026",
+                scadenza: "15/12/2026",
+                destinatari: "Tutti",
+                stato: "Attivo",
+                priorita: "Normale"
+            }
+        ];
+
+        // --- OROLOGIO E DATA IN TEMPO REALE ---
         function updateClock() {
             const now = new Date();
             document.getElementById('live-time').innerText = now.toLocaleTimeString('it-IT');
-            document.getElementById('live-date').innerText = now.toLocaleDateString('it-IT', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
+            document.getElementById('live-date').innerText = now.toLocaleDateString('it-IT', {
+                weekday: 'long',
+                day: 'numeric',
+                month: 'long',
+                year: 'numeric'
+            });
         }
         setInterval(updateClock, 1000);
         updateClock();
 
+        // --- GESTIONE CAROSELLO FOTO ---
         let currentSlide = 0;
         const slides = document.querySelectorAll('.carousel-slide');
         const dots = document.querySelectorAll('.dot');
+
         function showSlide(index) {
-            slides.forEach((s, i) => { s.classList.remove('active'); dots[i].classList.remove('bg-white'); dots[i].classList.add('bg-white/50'); });
+            slides.forEach((s, i) => {
+                s.classList.remove('active');
+                if (dots[i]) {
+                    dots[i].classList.remove('bg-white', 'w-6');
+                    dots[i].classList.add('bg-white/50', 'w-2');
+                }
+            });
             slides[index].classList.add('active');
-            dots[index].classList.remove('bg-white/50');
-            dots[index].classList.add('bg-white');
+            if (dots[index]) {
+                dots[index].classList.remove('bg-white/50', 'w-2');
+                dots[index].classList.add('bg-white', 'w-6');
+            }
         }
-        setInterval(() => { currentSlide = (currentSlide + 1) % slides.length; showSlide(currentSlide); }, 6000);
+        function nextSlide() {
+            currentSlide = (currentSlide + 1) % slides.length;
+            showSlide(currentSlide);
+        }
+        function prevSlide() {
+            currentSlide = (currentSlide - 1 + slides.length) % slides.length;
+            showSlide(currentSlide);
+        }
+        function goToSlide(index) {
+            currentSlide = index;
+            showSlide(currentSlide);
+        }
+        setInterval(nextSlide, 6500);
 
-        function openModal(id) { document.getElementById(id).classList.remove('hidden'); }
-        function closeModal(id) { document.getElementById(id).classList.add('hidden'); }
+        // --- GESTIONE MODALI ---
+        function openModal(id) {
+            document.getElementById(id).classList.remove('hidden');
+        }
+        function closeModal(id) {
+            document.getElementById(id).classList.add('hidden');
+        }
 
-        async function loadTotemData() {
-            const rawEvents = [
-                { titolo: "Open Day Scuola Secondaria 'Mila'", dataInizio: "2026-11-10", dataFine: "2026-11-25", luogo: "Plesso Mila", stato: "In Evidenza" },
-                { titolo: "Uscita Didattica a Fondazione Merz", dataInizio: "2026-11-18", dataFine: "2026-11-18", luogo: "Torino - Via Limone 24", stato: "In Evidenza" },
-                { titolo: "IV Edizione Settimana dell'Orientamento", dataInizio: "2026-11-23", dataFine: "2026-11-27", luogo: "Aula Romeo&Giulietta", stato: "Programmato" }
-            ];
+        // --- GESTIONE PDF ORARIO SCOLASTICO ---
+        function togglePdfConfig() {
+            document.getElementById('pdf-config-panel').classList.toggle('hidden');
+        }
+        function switchOrarioTab(tab) {
+            const pdfView = document.getElementById('orario-view-pdf');
+            const tableView = document.getElementById('orario-view-table');
+            const btnPdf = document.getElementById('tab-btn-pdf');
+            const btnTable = document.getElementById('tab-btn-table');
 
-            const rawAvvisi = [
-                "Circolare n. 112: Sciopero nazionale e riduzioni servizi.",
-                "Iscrizioni online aperte su Piattaforma Unica MIM.",
-                "Prenotazione colloqui scuola-famiglia attiva su Registro Elettronico."
-            ];
+            if (tab === 'pdf') {
+                pdfView.classList.remove('hidden');
+                tableView.classList.add('hidden');
+                btnPdf.className = 'bg-indigo-600 text-white px-4 py-2 rounded-xl text-xs font-bold transition';
+                btnTable.className = 'bg-slate-800 text-slate-300 hover:bg-slate-700 px-4 py-2 rounded-xl text-xs font-bold transition';
+            } else {
+                pdfView.classList.add('hidden');
+                tableView.classList.remove('hidden');
+                btnTable.className = 'bg-indigo-600 text-white px-4 py-2 rounded-xl text-xs font-bold transition';
+                btnPdf.className = 'bg-slate-800 text-slate-300 hover:bg-slate-700 px-4 py-2 rounded-xl text-xs font-bold transition';
+            }
+        }
+        function updateSchedulePdf() {
+            const rawVal = document.getElementById('pdf-drive-input').value.trim();
+            if (!rawVal) return;
 
+            let fileId = rawVal;
+            const match = rawVal.match(/\/d\/([a-zA-Z0-9_-]+)/);
+            if (match && match[1]) {
+                fileId = match[1];
+            }
+            const previewUrl = `https://docs.google.com/file/d/${fileId}/preview`;
+            const viewUrl = `https://docs.google.com/file/d/${fileId}/view`;
+
+            document.getElementById('schedule-pdf-iframe').src = previewUrl;
+            document.getElementById('schedule-external-link').href = viewUrl;
+            localStorage.setItem('king_mila_schedule_pdf', fileId);
+            document.getElementById('pdf-config-panel').classList.add('hidden');
+        }
+        // Ripristina eventuale PDF salvato localmente sul totem
+        (function restoreSavedPdf() {
+            const savedId = localStorage.getItem('king_mila_schedule_pdf');
+            if (savedId) {
+                document.getElementById('schedule-pdf-iframe').src = `https://docs.google.com/file/d/${savedId}/preview`;
+                document.getElementById('schedule-external-link').href = `https://docs.google.com/file/d/${savedId}/view`;
+            }
+        })();
+
+        // --- PARSING DATE ITALIANO (DD/MM/YYYY) E ISO (YYYY-MM-DD) ---
+        function parseItalianOrIsoDate(dateStr) {
+            if (!dateStr) return null;
+            const clean = String(dateStr).trim();
+
+            // Formato Google Visualization Date(YYYY,M,D)
+            const gvizMatch = clean.match(/Date\((\d+),(\d+),(\d+)\)/);
+            if (gvizMatch) {
+                return new Date(parseInt(gvizMatch[1]), parseInt(gvizMatch[2]), parseInt(gvizMatch[3]), 23, 59, 59);
+            }
+
+            // Formato DD/MM/YYYY o DD-MM-YYYY
+            const itMatch = clean.match(/^(\d{1,2})[\/\-](\d{1,2})[\/\-](\d{4})$/);
+            if (itMatch) {
+                return new Date(parseInt(itMatch[3]), parseInt(itMatch[2]) - 1, parseInt(itMatch[1]), 23, 59, 59);
+            }
+
+            // Formato YYYY-MM-DD
+            const isoMatch = clean.match(/^(\d{4})[\/\-](\d{1,2})[\/\-](\d{1,2})$/);
+            if (isoMatch) {
+                return new Date(parseInt(isoMatch[1]), parseInt(isoMatch[2]) - 1, parseInt(isoMatch[3]), 23, 59, 59);
+            }
+
+            const parsed = new Date(clean);
+            return isNaN(parsed.getTime()) ? null : parsed;
+        }
+
+        function formatDisplayDate(dateStr) {
+            const d = parseItalianOrIsoDate(dateStr);
+            if (!d) return dateStr || '';
+            return d.toLocaleDateString('it-IT', { day: '2-digit', month: '2-digit', year: 'numeric' });
+        }
+
+        // --- PARSER CSV DI FALLBACK ---
+        function parseCSV(csvText) {
+            const rows = [];
+            let currentRow = [];
+            let currentVal = '';
+            let inQuotes = false;
+
+            for (let i = 0; i < csvText.length; i++) {
+                const char = csvText[i];
+                const nextChar = csvText[i + 1];
+
+                if (char === '"' && inQuotes && nextChar === '"') {
+                    currentVal += '"';
+                    i++;
+                } else if (char === '"') {
+                    inQuotes = !inQuotes;
+                } else if (char === ',' && !inQuotes) {
+                    currentRow.push(currentVal.trim());
+                    currentVal = '';
+                } else if ((char === '\n' || (char === '\r' && nextChar === '\n')) && !inQuotes) {
+                    if (char === '\r') i++;
+                    currentRow.push(currentVal.trim());
+                    rows.push(currentRow);
+                    currentRow = [];
+                    currentVal = '';
+                } else {
+                    currentVal += char;
+                }
+            }
+            if (currentVal || currentRow.length > 0) {
+                currentRow.push(currentVal.trim());
+                rows.push(currentRow);
+            }
+            return rows;
+        }
+
+        // --- FETCH DA GOOGLE VISUALIZATION API CON FALLBACK CSV ---
+        async function fetchGoogleSheetTab(sheetName) {
+            const jsonUrl = `https://docs.google.com/spreadsheets/d/${GOOGLE_SHEET_ID}/gviz/tq?tqx=out:json&sheet=${encodeURIComponent(sheetName)}`;
+            try {
+                const res = await fetch(jsonUrl, { cache: 'no-store' });
+                if (!res.ok) throw new Error('HTTP error ' + res.status);
+                const text = await res.text();
+                const jsonStart = text.indexOf('{');
+                const jsonEnd = text.lastIndexOf('}');
+                if (jsonStart === -1 || jsonEnd === -1) throw new Error('Formato GViz non valido');
+                const data = JSON.parse(text.substring(jsonStart, jsonEnd + 1));
+                if (!data.table || !data.table.rows) throw new Error('Tabella vuota');
+
+                return data.table.rows.map(r => (r.c || []).map(cell => (cell ? (cell.f || cell.v || '') : '')));
+            } catch (errJson) {
+                // Tentativo 2: Fallback CSV
+                const csvUrl = `https://docs.google.com/spreadsheets/d/${GOOGLE_SHEET_ID}/gviz/tq?tqx=out:csv&sheet=${encodeURIComponent(sheetName)}`;
+                const resCsv = await fetch(csvUrl, { cache: 'no-store' });
+                if (!resCsv.ok) throw new Error('Fallback CSV fallito');
+                const csvText = await resCsv.text();
+                const parsed = parseCSV(csvText);
+                // Rimuove l'intestazione se presente
+                return parsed.length > 1 ? parsed.slice(1) : [];
+            }
+        }
+
+        // --- CARICAMENTO, FILTRO ULTIMI 15 GIORNI E RENDERING ---
+        async function loadTotemData(manual = false) {
+            const syncDot = document.getElementById('sync-dot');
+            const syncStatus = document.getElementById('sync-status');
+            const syncIcon = document.getElementById('sync-icon');
+
+            if (manual && syncIcon) syncIcon.classList.add('fa-spin');
+
+            let eventiList = [];
+            let avvisiList = [];
+            let isLive = false;
+
+            try {
+                // 1. Fetch scheda "Eventi"
+                // Colonne reali: ID Evento, Titolo Evento, Categoria, Data Inizio, Data Fine, Orario, Luogo / Plesso, Destinatari, Stato Totem, Priorità
+                const rawEventRows = await fetchGoogleSheetTab('Eventi');
+                eventiList = rawEventRows
+                    .filter(row => row[1] && row[1].toLowerCase() !== 'titolo evento')
+                    .map(row => ({
+                        id: row[0] || '',
+                        titolo: row[1] || '',
+                        categoria: row[2] || 'Evento',
+                        dataInizio: row[3] || '',
+                        dataFine: row[4] || row[3] || '',
+                        orario: row[5] || '',
+                        luogo: row[6] || 'Istituto King-Mila',
+                        destinatari: row[7] || '',
+                        stato: row[8] || 'Attivo',
+                        priorita: row[9] || 'Normale'
+                    }));
+
+                // 2. Fetch scheda "Avvisi"
+                // Colonne reali: ID Avviso, Titolo Avviso, Tipologia, Testo a Scorrimento (Ticker), Inizio Validità, Scadenza, Destinatari, Stato Ticker, Priorità
+                const rawAvvisiRows = await fetchGoogleSheetTab('Avvisi');
+                avvisiList = rawAvvisiRows
+                    .filter(row => row[1] && row[1].toLowerCase() !== 'titolo avviso')
+                    .map(row => ({
+                        id: row[0] || '',
+                        titolo: row[1] || '',
+                        tipologia: row[2] || 'Avviso',
+                        testo: row[3] || row[1] || '',
+                        inizio: row[4] || '',
+                        scadenza: row[5] || '',
+                        destinatari: row[6] || '',
+                        stato: row[7] || 'Attivo',
+                        priorita: row[8] || 'Normale'
+                    }));
+
+                isLive = true;
+            } catch (error) {
+                console.warn('Utilizzo dati di backup locali (verificare condivisione pubblica del foglio Google):', error);
+                eventiList = FALLBACK_EVENTS;
+                avvisiList = FALLBACK_AVVISI;
+            }
+
+            // Aggiorna indicatore stato sincronizzazione
+            if (isLive) {
+                syncDot.className = 'h-2.5 w-2.5 rounded-full bg-emerald-400';
+                syncStatus.innerText = 'Sincronizzato con Google Fogli';
+                syncStatus.className = 'text-xs font-semibold text-emerald-300';
+            } else {
+                syncDot.className = 'h-2.5 w-2.5 rounded-full bg-amber-400';
+                syncStatus.innerText = 'Modalità Backup Locale';
+                syncStatus.className = 'text-xs font-semibold text-amber-300';
+            }
+            if (syncIcon) setTimeout(() => syncIcon.classList.remove('fa-spin'), 500);
+
+            // --- FILTRO AUTOMATICO ULTIMI 15 GIORNI E RIMOZIONE SCADUTI ---
             const oggi = new Date();
-            const quindiciGiorniFa = new Date();
+            oggi.setHours(0, 0, 0, 0);
+
+            const quindiciGiorniFa = new Date(oggi);
             quindiciGiorniFa.setDate(oggi.getDate() - 15);
 
-            const activeEvents = rawEvents.filter(ev => new Date(ev.dataFine) >= quindiciGiorniFa);
-
-            const container = document.getElementById('events-container');
-            container.innerHTML = '';
-            activeEvents.forEach(ev => {
-                container.innerHTML += `
-                    <div class="bg-slate-950/70 p-3 rounded-xl border border-slate-800 flex items-center justify-between">
-                        <div>
-                            <span class="text-[10px] bg-indigo-950 text-indigo-200 px-2.5 py-0.5 rounded font-semibold border border-indigo-800/60">${ev.dataInizio}</span>
-                            <h4 class="font-semibold text-xs text-white mt-1.5">${ev.titolo}</h4>
-                            <p class="text-[11px] text-slate-400 mt-0.5">📍 ${ev.luogo}</p>
-                        </div>
-                        <span class="text-[11px] bg-emerald-950 text-emerald-300 px-2.5 py-1 rounded-full font-medium border border-emerald-800/60">${ev.stato}</span>
-                    </div>
-                `;
+            // Filtra Eventi: mostra solo eventi con Data Fine >= 15 giorni fa e Stato Totem non "Scaduto"/"Archiviato"
+            const activeEvents = eventiList.filter(ev => {
+                const statoLower = (ev.stato || '').toLowerCase();
+                if (statoLower === 'scaduto' || statoLower === 'archiviato' || statoLower === 'nascosto') {
+                    return false;
+                }
+                const dataFineObj = parseItalianOrIsoDate(ev.dataFine || ev.dataInizio);
+                if (!dataFineObj) return true;
+                return dataFineObj >= quindiciGiorniFa;
             });
 
-            document.getElementById('ticker-content').innerText = "📢 " + rawAvvisi.join("   •   ") + "   •   I.C. King-Mila: Aggiornato in tempo reale dal foglio Google 'avviso totem'.";
+            // Ordina per Priorità (Alta prima) e poi per Data Inizio
+            activeEvents.sort((a, b) => {
+                const pA = (a.priorita || '').toLowerCase() === 'alta' ? 0 : 1;
+                const pB = (b.priorita || '').toLowerCase() === 'alta' ? 0 : 1;
+                if (pA !== pB) return pA - pB;
+                const dA = parseItalianOrIsoDate(a.dataInizio) || new Date(0);
+                const dB = parseItalianOrIsoDate(b.dataInizio) || new Date(0);
+                return dA - dB;
+            });
+
+            // Renderizza Eventi
+            const container = document.getElementById('events-container');
+            document.getElementById('events-count').innerText = `${activeEvents.length} ${activeEvents.length === 1 ? 'evento' : 'eventi'}`;
+            container.innerHTML = '';
+
+            if (activeEvents.length === 0) {
+                container.innerHTML = `
+                    <div class="bg-slate-950/60 p-6 rounded-2xl border border-slate-800 text-center text-slate-400 text-xs">
+                        Nessun evento attivo negli ultimi 15 giorni nel foglio Google "avviso totem".
+                    </div>
+                `;
+            } else {
+                activeEvents.forEach(ev => {
+                    const isHighPriority = (ev.priorita || '').toLowerCase() === 'alta';
+                    const dataFineObj = parseItalianOrIsoDate(ev.dataFine || ev.dataInizio);
+                    const isCompletedRecent = dataFineObj && dataFineObj < oggi;
+
+                    const badgeStatus = isCompletedRecent
+                        ? `<span class="text-[10px] bg-slate-800 text-slate-300 px-2.5 py-1 rounded-full font-semibold border border-slate-700">Svolto di recente</span>`
+                        : `<span class="text-[10px] bg-emerald-950 text-emerald-300 px-2.5 py-1 rounded-full font-bold border border-emerald-800/60">${ev.stato || 'In Evidenza'}</span>`;
+
+                    const priorityBadge = isHighPriority
+                        ? `<span class="text-[10px] bg-amber-500/20 text-amber-300 border border-amber-500/40 px-2 py-0.5 rounded font-bold uppercase"><i class="fa-solid fa-star mr-1"></i>Priorità Alta</span>`
+                        : '';
+
+                    const dateText = ev.dataFine && ev.dataFine !== ev.dataInizio
+                        ? `${formatDisplayDate(ev.dataInizio)} → ${formatDisplayDate(ev.dataFine)}`
+                        : formatDisplayDate(ev.dataInizio);
+
+                    container.innerHTML += `
+                        <div class="bg-slate-950/80 hover:bg-slate-950 p-3.5 rounded-2xl border ${isHighPriority ? 'border-amber-500/40' : 'border-slate-800'} flex items-center justify-between transition">
+                            <div class="space-y-1 pr-3">
+                                <div class="flex flex-wrap items-center gap-2">
+                                    <span class="text-[10px] bg-indigo-950 text-indigo-300 px-2.5 py-0.5 rounded-md font-bold border border-indigo-800/60">
+                                        <i class="fa-regular fa-calendar mr-1"></i>${dateText}
+                                    </span>
+                                    <span class="text-[10px] bg-slate-800 text-slate-300 px-2 py-0.5 rounded-md font-semibold">
+                                        ${ev.categoria}
+                                    </span>
+                                    ${priorityBadge}
+                                </div>
+                                <h4 class="font-bold text-sm text-white leading-snug">${ev.titolo}</h4>
+                                <div class="flex flex-wrap items-center gap-3 text-[11px] text-slate-400">
+                                    <span><i class="fa-solid fa-location-dot text-amber-400 mr-1"></i>${ev.luogo}</span>
+                                    ${ev.orario ? `<span><i class="fa-regular fa-clock text-indigo-400 mr-1"></i>${ev.orario}</span>` : ''}
+                                    ${ev.destinatari ? `<span><i class="fa-solid fa-users text-emerald-400 mr-1"></i>${ev.destinatari}</span>` : ''}
+                                </div>
+                            </div>
+                            <div class="shrink-0">
+                                ${badgeStatus}
+                            </div>
+                        </div>
+                    `;
+                });
+            }
+
+            // Filtra Avvisi Ticker: Stato Ticker attivo e Scadenza >= oggi
+            const activeAvvisi = avvisiList.filter(av => {
+                const statoLower = (av.stato || '').toLowerCase();
+                if (statoLower === 'scaduto' || statoLower === 'inattivo' || statoLower === 'nascosto' || statoLower === 'archiviato') {
+                    return false;
+                }
+                if (av.scadenza) {
+                    const scadenzaObj = parseItalianOrIsoDate(av.scadenza);
+                    if (scadenzaObj && scadenzaObj < oggi) return false;
+                }
+                return true;
+            });
+
+            const tickerEl = document.getElementById('ticker-content');
+            if (activeAvvisi.length > 0) {
+                const formattedTicker = activeAvvisi.map(av => {
+                    const prefix = (av.priorita || '').toLowerCase() === 'alta' ? '🚨' : '📢';
+                    return `${prefix} [${av.tipologia.toUpperCase()}] ${av.titolo}: ${av.testo}`;
+                }).join('     •     ');
+                tickerEl.innerText = `${formattedTicker}     •     Istituto Comprensivo "King-Mila" Torino`;
+            } else {
+                tickerEl.innerText = '📢 Benvenuti all’Istituto Comprensivo "King-Mila" di Torino • Consultare i riquadri a destra per Orario Scolastico, Segreteria e Mappa.';
+            }
         }
 
+        // Avvio iniziale e aggiornamento silenzioso automatico ogni 2 minuti (120.000 ms)
         loadTotemData();
+        setInterval(() => loadTotemData(false), 120000);
     </script>
 </body>
 </html>
